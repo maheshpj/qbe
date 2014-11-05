@@ -1,0 +1,103 @@
+<maindesign>
+    <reportfor>
+        <span> Report for: </span>
+        <select name="movie">
+            <option value="none">Select table...</option>
+        {% for key, value in tables.items %}
+            <option value="{{key}}">{{key}}</option>
+        {% endfor %}
+        </select>
+    </reportfor>
+    
+    <subdesign>
+        <sidebar style="width:10%">
+            <table width="100%">
+                <tr>
+                    <td>
+                        <p>Field</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Table</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Show</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Sort</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Total</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>Criteria</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border-bottom: 0px">
+                        <p>Or</p>
+                    </td>
+                </tr>
+            </table>                                     
+        </sidebar>
+
+        <input type="hidden" value="0" id="theValue" />
+        <div style="float: left; width: 90%; overflow: auto;" id="sheet">
+            {% for field in design_fields %}
+            <div id="fieldEle" style="width:180px;display: inline-block">
+                <table width="100%">
+                    <tr>
+                        <td>
+                            <p>{{ field.1 }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>{{ field.0 }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="cb_show_{{ field.0 }}_{{ field.1 }}" value="">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="cb_sort_{{ field.0 }}_{{ field.1 }}" value="Bike">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select name="sl_total_{{ field.0 }}_{{ field.1 }}">
+                                <option value="none"></option>
+                                {% for fun in total %}
+                                <option value="{{fun}}">{{fun}}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input type="text" name="txt_cr_{{ field.0 }}_{{ field.1 }}" value="{{ criteria }}">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom: 0px">
+                            <input type="text" name="txt_orcr_{{ field.0 }}_{{ field.1 }}" value="{{ or_criteria }}">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            {% endfor %}    
+        </div>  
+    </subdesign>  
+<maindesign>

@@ -1,0 +1,16 @@
+<ul>
+    {% for key, value in tables.items %}
+        <li>
+            <p onclick="toggle('{{ key }}')">{{ key }} </p>
+            <ul style="display: none" id={{ key }} name={{ key }}>
+                {% for clm in value %}
+                    <li>
+                        {% spaceless %}
+                            <p><a href="/add/{{ key }}/{{ clm.name }}/">{{ clm.name }}</a></p>           
+                        {% endspaceless %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>
