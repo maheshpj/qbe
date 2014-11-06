@@ -12,7 +12,7 @@ from qbeapp.dbs import get_table_names
 def get_aggregation():
     return ['avg', 'count', 'max', 'min', 'sum', 'group by']   
     
-class DesignField(forms.Form):
+class DesignFieldForm(forms.Form):
     show = forms.BooleanField(required=False)
     sort = forms.BooleanField(required=False)
     total = forms.ChoiceField(widget=forms.Select, choices=get_aggregation(), 
@@ -24,6 +24,6 @@ class QbeForm(forms.Form):
     report_for = forms.ChoiceField(widget=forms.Select, 
                                    choices=get_table_names(), 
                                     required=True, help_text="Report for...")                                
-    designFieldFormSet = formset_factory(DesignField, max_num=20)
+    designFieldFormSet = formset_factory(DesignFieldForm, max_num=20)
     
  

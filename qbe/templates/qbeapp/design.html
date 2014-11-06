@@ -7,6 +7,7 @@
             <option value="{{key}}">{{key}}</option>
         {% endfor %}
         </select>
+        {{ form.report_for }}    
     </reportfor>
     
     <subdesign>
@@ -52,7 +53,8 @@
 
         <input type="hidden" value="0" id="theValue" />
         <div style="float: left; width: 90%; overflow: auto;" id="sheet">
-            {% for field in design_fields %}
+            
+            {% for form in form.designFieldFormSet %}            
             <div id="fieldEle" style="width:180px;display: inline-block">
                 <table width="100%">
                     <tr>
@@ -68,11 +70,13 @@
                     <tr>
                         <td>
                             <input type="checkbox" name="cb_show_{{ field.0 }}_{{ field.1 }}" value="True">
+                            {{ form.show }}
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <input type="checkbox" name="cb_sort_{{ field.0 }}_{{ field.1 }}" value="True">
+                            {{ form.sort }}
                         </td>
                     </tr>
                     <tr>
@@ -83,16 +87,19 @@
                                 <option value="{{fun}}">{{fun}}</option>
                                 {% endfor %}
                             </select>
+                            {{ form.total }}
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <input type="text" name="txt_cr_{{ field.0 }}_{{ field.1 }}" value="{{ criteria }}">
+                            {{ form.criteria }}
                         </td>
                     </tr>
                     <tr>
                         <td style="border-bottom: 0px">
                             <input type="text" name="txt_orcr_{{ field.0 }}_{{ field.1 }}" value="{{ or_criteria }}">
+                            {{ form.orcriteria }}
                         </td>
                     </tr>
                 </table>
