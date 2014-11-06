@@ -5,7 +5,7 @@
         <title>{% block title %}{% endblock title %}</title>
         <style>
             h1 {color: #909090; margin: 2px; padding: 1px}
-            select {margin-left: 4px; border-radius: 10px;}            
+            select {border-radius: 25px; height:25px; border: 1px solid grey; color:grey; background-color:#E0E0E0}            
             p {margin:2px; padding:0; color:#808080}    
             body {font-family: Verdana, sans-serif; font-size:0.8em;}
             nav,action,report,footer
@@ -21,20 +21,28 @@
             table tr td{border-bottom: 1px solid grey}
             maindesign {clear:both;}
             maindesign sidebar {float: left;}
-            maindesign subdesign {border:1px solid grey; border-radius: 4px;}
+            maindesign subdesign {border:1px solid grey; border-radius: 12px;}
             maindesign reportfor, maindesign subdesign {padding: 0px 0px 4px 0px; clear:both; display: flex;}
         </style>
 
         <script>
             function toggle(id) {
-                tbl = document.getElementById(id)
+                tbl = document.getElementById(id);
                 if(tbl.style.display == 'none')
-                    tbl.style.display = 'block'
+                    tbl.style.display = 'block';
                 else
-                    tbl.style.display = 'none'
+                    tbl.style.display = 'none';
+            }
+            
+            function addElement(cb, table, clm) {
+                var ele = document.getElementById('div-' + table + '.' + clm);
+                if(cb.checked == true)
+                    ele.style.display = 'inline-block';
+                else
+                    ele.style.display = 'none';
             }
 
-            function addElement(table, clm) {
+            function addElement2(table, clm) {
                 var sheet = document.getElementById('sheet');
                 var fieldtemplate = document.getElementById('fieldtemplate');   
                 var frag = document.createDocumentFragment(),

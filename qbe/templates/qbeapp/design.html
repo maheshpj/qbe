@@ -1,12 +1,5 @@
 <maindesign>
     <reportfor>
-        <span> Report for: </span>
-        <select name="reprtfor">
-            <option value="none">Select table...</option>
-        {% for key, value in tables.items %}
-            <option value="{{key}}">{{key}}</option>
-        {% endfor %}
-        </select>
         {{ form.report_for }}    
     </reportfor>
     
@@ -53,53 +46,44 @@
 
         <input type="hidden" value="0" id="theValue" />
         <div style="float: left; width: 90%; overflow: auto;" id="sheet">
-            
-            {% for form in form.designFieldFormSet %}            
-            <div id="fieldEle" style="width:180px;display: inline-block">
+            {{ design_fields.management_form }}
+            {% for design_field_form in design_fields.forms %}            
+            <div id="div-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
+                style="width:180px;display: {{design_field_form.style_display }}">
                 <table width="100%">
                     <tr>
                         <td>
-                            <p>{{ field.1 }}</p>
+                            <p>{{ design_field_form.table_name }}</p>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <p>{{ field.0 }}</p>
+                            <p>{{ design_field_form.column_name }}</p>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input type="checkbox" name="cb_show_{{ field.0 }}_{{ field.1 }}" value="True">
-                            {{ form.show }}
+                            {{ design_field_form.show }}
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input type="checkbox" name="cb_sort_{{ field.0 }}_{{ field.1 }}" value="True">
-                            {{ form.sort }}
+                            {{ design_field_form.sort }}
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <select name="sl_total_{{ field.0 }}_{{ field.1 }}">
-                                <option value="none"></option>
-                                {% for fun in total %}
-                                <option value="{{fun}}">{{fun}}</option>
-                                {% endfor %}
-                            </select>
-                            {{ form.total }}
+                            {{ design_field_form.total }}
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input type="text" name="txt_cr_{{ field.0 }}_{{ field.1 }}" value="{{ criteria }}">
-                            {{ form.criteria }}
+                            {{ design_field_form.criteria }}
                         </td>
                     </tr>
                     <tr>
                         <td style="border-bottom: 0px">
-                            <input type="text" name="txt_orcr_{{ field.0 }}_{{ field.1 }}" value="{{ or_criteria }}">
-                            {{ form.orcriteria }}
+                            {{ design_field_form.orcriteria }}
                         </td>
                     </tr>
                 </table>

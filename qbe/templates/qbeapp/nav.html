@@ -5,8 +5,12 @@
             <ul style="display: none" id={{ key }} name={{ key }}>
                 {% for clm in value %}
                     <li>
-                        {% spaceless %}
-                            <p><a href="/add/{{ key }}/{{ clm.name }}/">{{ clm.name }}</a></p>           
+                        {% spaceless %}                            
+                            <p>
+                                <input type="checkbox" 
+                                    onclick="addElement(this, '{{ key }}', '{{ clm.name }}')">                            
+                                {{ clm.name }}
+                            </p>           
                         {% endspaceless %}
                     </li>
                 {% endfor %}

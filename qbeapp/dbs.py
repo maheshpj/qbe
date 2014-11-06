@@ -22,3 +22,11 @@ def get_table_clms(table_name):
     
 def get_tables():
     return dict(map(get_table_clms, get_table_names()))
+    
+def get_table_clm_tuple():
+    tables = get_tables()
+    tables_tuple = []
+    for k in tables.keys():
+        for v in tables[k]:
+            tables_tuple.append((k, v['name']))
+    return tables_tuple
