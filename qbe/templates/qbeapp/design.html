@@ -1,7 +1,7 @@
 <maindesign>
     <reportfor>
         <span> Report for: </span>
-        <select name="movie">
+        <select name="reprtfor">
             <option value="none">Select table...</option>
         {% for key, value in tables.items %}
             <option value="{{key}}">{{key}}</option>
@@ -67,12 +67,12 @@
                     </tr>
                     <tr>
                         <td>
-                            <input type="checkbox" name="cb_show_{{ field.0 }}_{{ field.1 }}" value="">
+                            <input type="checkbox" name="cb_show_{{ field.0 }}_{{ field.1 }}" value="True">
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <input type="checkbox" name="cb_sort_{{ field.0 }}_{{ field.1 }}" value="Bike">
+                            <input type="checkbox" name="cb_sort_{{ field.0 }}_{{ field.1 }}" value="True">
                         </td>
                     </tr>
                     <tr>
@@ -100,4 +100,5 @@
             {% endfor %}    
         </div>  
     </subdesign>  
+        
 <maindesign>

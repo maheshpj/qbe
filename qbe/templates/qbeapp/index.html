@@ -2,12 +2,16 @@
 {% load i18n %}
 {% block title %}QBE App{% endblock title %}
 
-<form action="" method="post">
+
 {% block nav %}
     {% include "qbeapp/nav.html" %}
 {% endblock nav %}
 
 {% block design %}
     {% include "qbeapp/design.html" %}
+    
+    <div style="margin: 4px 0px 0px 0px">
+        <input type="submit" value="Run" style="width:100px; height: 30px; border-radius: 30px;">
+    </div>
 {% endblock design %}
 </form>

@@ -16,7 +16,7 @@
             nav ul {margin:0; padding:0;}
             nav ul li {display:block; margin-left:20px;}
             nav ul li p {cursor: pointer; border-radius: 10px; border:1px solid grey; padding: 2px 2px 2px 16px; background-color: #808080; color:white}
-            nav ul li ul li p {cursor: pointer; border-radius: 10px; border:1px solid #E0E0E0; padding: 2px 2px 2px 16px; background-color: #F0F0F0; color:grey}
+            nav ul li ul li p {border-radius: 10px; border:1px solid #E0E0E0; padding: 2px 2px 2px 16px; background-color: #F0F0F0; color:grey}
             dbtable {border:1px solid grey;}
             table tr td{border-bottom: 1px solid grey}
             maindesign {clear:both;}
@@ -52,20 +52,24 @@
         <header>
             <h1>Welcome to QBE</h1>            
         </header>
-        <content>
-            <nav> 
-                {% block nav %}{% endblock nav %}
-            </nav>   
-            <action>
-                <design> 
-                    {% block design %}{% endblock design %}
-                </design> 
         
-                <report> 
-                    {% block report %}report{% endblock report %}
-                </report> 
-            </action>
-        </content>
+        <form action="/report/" method="post">{% csrf_token %} 
+            <content> 
+                <nav> 
+                    {% block nav %}{% endblock nav %}
+                </nav>   
+                <action>
+                    <design> 
+                        {% block design %}{% endblock design %}
+                    </design> 
+            
+                    <report> 
+                        {% block report %}report{% endblock report %}
+                    </report> 
+                </action>            
+            </content>
+        </form>    
+        
         <footer> 
             <p>Made with Django by Mahesh</p>
         </footer>     
