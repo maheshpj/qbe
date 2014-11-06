@@ -6,8 +6,9 @@ Created on Thu Nov 06 13:39:44 2014
 """
 from sqlalchemy import create_engine
 from sqlalchemy.engine import reflection
+from django.conf import settings
 
-engine = create_engine('sqlite:///I:/Project/qbe/db.sqlite3')
+engine = create_engine('sqlite:///' + settings.DATABASES['default']['NAME'])
 insp = reflection.Inspector.from_engine(engine)
 
 def get_table_names():
