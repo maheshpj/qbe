@@ -10,6 +10,7 @@ from django.conf import settings
 
 engine = create_engine('sqlite:///' + settings.DATABASES['default']['NAME'])
 insp = reflection.Inspector.from_engine(engine)
+table_dict = {}
 
 def get_table_names():
     return insp.get_table_names()
@@ -21,7 +22,10 @@ def get_table_clms(table_name):
     return (table_name, get_column_names(table_name))
     
 def get_tables():
-    return dict(map(get_table_clms, get_table_names()))
+    global table_dict
+    if not table_dict:
+        table_dict = dict(map(get_table_clms, get_table_names()))    
+    return table_dict
     
 def get_table_clm_tuple():
     tables = get_tables()
