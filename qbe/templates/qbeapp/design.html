@@ -1,6 +1,6 @@
 <maindesign>
     <reportfor>
-        {{ form.report_for }}    
+        {{ form.report_for }}  {{ form.report_for.errors }}  
     </reportfor>
     
     <subdesign>
@@ -79,11 +79,13 @@
                     <tr>
                         <td>
                             {{ design_field_form.criteria }}
+                            {{ design_field_form.errors }} 
                         </td>
                     </tr>
                     <tr>
                         <td style="border-bottom: 0px">
                             {{ design_field_form.orcriteria }}
+                            {{ design_field_form.errors }} 
                         </td>
                     </tr>
                 </table>
