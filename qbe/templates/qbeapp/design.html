@@ -44,12 +44,16 @@
             </table>                                     
         </sidebar>
 
-        <input type="hidden" value="0" id="theValue" />
         <div style="float: left; width: 90%; overflow: auto;" id="sheet">
             {{ design_fields.management_form }}
-            {% for design_field_form in design_fields.forms %}            
+            {% for design_field_form in design_fields.forms %}  
+                     
             <div id="div-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
                 style="width:180px;display: {{design_field_form.style_display }}">
+                <input type="hidden" 
+                    id="cnt-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
+                    value="{{ forloop.counter0 }}">
+                {{ design_field_form.field }}              
                 <table width="100%">
                     <tr>
                         <td>

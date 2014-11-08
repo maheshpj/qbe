@@ -1,5 +1,4 @@
 from django.shortcuts import render_to_response
-from django.http import HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from qbeapp.forms import *
 from qbeapp.dbs import get_tables, get_table_clm_tuple
@@ -20,7 +19,8 @@ def get_design_formset():
     table_clm_tuples = get_table_clm_tuple()
     DesignFieldFormset = formset_factory(DesignFieldForm, 
                                          extra=len(table_clm_tuples))
-    formset = create_formset_from_tables(DesignFieldFormset(), table_clm_tuples)    
+    formset = create_formset_from_tables(DesignFieldFormset(), 
+                                         table_clm_tuples)    
     return formset    
 
 def create_formset_from_tables(formset, tuples):
@@ -38,20 +38,20 @@ def clear_design_fields():
 def get_report(request, template_name=TEMPLATE_INDEX):
     form = QbeForm(request.POST or None)
     DesignFieldFormset = formset_factory(DesignFieldForm)
-    formset = DesignFieldFormset(request.POST)
+    formset = DesignFieldFormset(request.POST or None)
     if form.is_valid() and formset.is_valid():
         cd_form = form.cleaned_data
-        #cd_formset = formset.cleaned_data
-        print 'report_for:' + cd_form['report_for']
-        for f in formset.forms:        
-            cd_f = f.cleaned_data   
-            print cd_f
+        print 'report_for: ' + cd_form['report_for']
+        for f in formset.forms: 
+            if is_valid_design_field(f.cleaned_data):
+                print f.cleaned_data
     c =  {"tables": get_tables(), 
           "form": form, 
           "design_fields": formset}    
     return render_to_response(template_name, c)    
                                     
-
+def is_valid_design_field(design_field):
+    return design_field and design_field['field']
     
     
         

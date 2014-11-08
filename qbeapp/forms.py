@@ -22,6 +22,7 @@ class DesignFieldForm(forms.Form):
     table_name = ""
     column_name = ""
     style_display = "none"
+    field = forms.CharField(required=False, widget=forms.HiddenInput())
     show = forms.BooleanField(required=False)
     sort = forms.BooleanField(required=False)
     total = forms.ChoiceField(choices=get_aggregation(), required=False)

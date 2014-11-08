@@ -7,21 +7,15 @@ function toggle(id) {
 }
 
 function addElement(cb, table, clm) {
-    var ele = document.getElementById('div-' + table + '.' + clm);
-    if (cb.checked == true)
-        ele.style.display = 'inline-block';
-    else
-        ele.style.display = 'none';
-}
-
-function addElement2(table, clm) {
-    var sheet = document.getElementById('sheet');
-    var fieldtemplate = document.getElementById('fieldtemplate');
-    var frag = document.createDocumentFragment(),
-        temp = document.createElement('div');
-    temp.innerHTML = fieldtemplate.innerHTML;
-    while (temp.firstChild) {
-        frag.appendChild(temp.firstChild);
+    var el_form = document.getElementById('div-' + table + '.' + clm);
+    var cnt = document.getElementById('cnt-' + table + '.' + clm).value;
+    var hid_id = 'id_' + 'form-' + cnt + '-field'
+    var el_hid = document.getElementById(hid_id)
+    if (cb.checked == true) {
+        el_form.style.display = 'inline-block';
+        el_hid.value = table + '.' + clm;        
+    } else {
+        el_form.style.display = 'none';
+        el_hid.value = '';
     }
-    sheet.appendChild(frag);
 }

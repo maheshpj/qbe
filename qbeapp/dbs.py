@@ -23,7 +23,7 @@ def get_table_clms(table_name):
     
 def get_tables():
     global table_dict
-    if not table_dict:
+    if not len(table_dict) > 0:
         table_dict = dict(map(get_table_clms, get_table_names()))    
     return table_dict
     
