@@ -15,6 +15,10 @@ ORDER_BY = "ORDER_BY"
 SPACE = " "
 COMMA = ", "
 DOT = "."
+INNER = "INNER"
+LEFT_OUTER = "LEFT OUTER"
+JOIN = "JOIN"
+ON = "ON"
 
 def get_sidebar_tables():
     return get_tables()

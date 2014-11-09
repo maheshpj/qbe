@@ -38,7 +38,4 @@ class DesignFieldForm(forms.Form):
     orcriteria = forms.CharField(max_length=1000, required=False)
                                 
 class QbeForm(forms.Form):
-    report_for = forms.ChoiceField(choices=report_choices(), required=True)  
-    
-    
- 
+    report_for = forms.ChoiceField(choices=report_choices(), required=True)
