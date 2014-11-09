@@ -1,0 +1,6 @@
+*.pyc
+*.spyderproject
+*.spyderworkspace
+obj/
+*.pyproj
+bin/
