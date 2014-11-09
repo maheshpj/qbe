@@ -1,8 +1,10 @@
 <maindesign>
-    <reportfor>
-        {{ form.report_for }}  {{ form.report_for.errors }}  
-    </reportfor>
-    
+    <div id="reportfor" name="reportfor">
+        {{ form.report_for }}  
+        <div id="reportfor_err" name="reportfor_err" style="display: inline-block">
+            {{ form.report_for.errors }} 
+        </div> 
+    </div>
     <subdesign>
         <sidebar style="width:10%">
             <table width="100%">
@@ -44,12 +46,12 @@
             </table>                                     
         </sidebar>
 
-        <div style="float: left; width: 90%; overflow: auto;" id="sheet">
+        <div class="sheet" id="sheet">
             {{ design_fields.management_form }}
             {% for design_field_form in design_fields.forms %}  
                      
             <div id="div-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
-                style="width:180px;display: {{design_field_form.style_display }}">
+                style="width:210px;display: {{design_field_form.style_display }}">
                 <input type="hidden" 
                     id="cnt-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
                     value="{{ forloop.counter0 }}">

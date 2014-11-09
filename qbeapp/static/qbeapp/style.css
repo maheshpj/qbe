@@ -6,7 +6,7 @@ h1
 }
 select
 {
-      background-color: #E0E0E0;
+     background-color: #E0E0E0;
 	border: 1px solid grey;
 	border-radius: 10px;
 	color: grey;
@@ -37,17 +37,25 @@ ul.errorlist
       margin: 0 0 3px;
       padding: 4px 5px;
 }
+.errorlist
+{
+      color: red;
+      display: block;
+      font-size: 12px;
+      margin: 0 0 3px;
+      padding: 4px 5px;
+}
 body
 {
 	font-family: Verdana, sans-serif;
 	font-size: 0.8em;
 }
-maindesign reportfor select
+maindesign #reportfor select
 {
 	border-radius: 25px;
 	height: 25px;
 }
-nav,action,report,footer
+nav,action,footer
 {
 	display: block;
 	margin: 5px;
@@ -114,14 +122,41 @@ maindesign sidebar
 {
 	float: left;
 }
-maindesign subdesign
+maindesign subdesign, #report_div
 {
 	border: 1px solid grey;
 	border-radius: 12px;
 }
-maindesign reportfor, maindesign subdesign
+maindesign #reportfor, maindesign subdesign
 {
 	clear: both;
 	display: flex;
 	padding: 0px 0px 4px 0px;
+}
+.clear_all
+{
+    align-self: center; 
+    position: relative; 
+    right:-80%
+}
+.run
+{
+    width:100px; 
+    height: 30px; 
+    border-radius: 30px;
+}
+.sheet
+{
+    float: left; 
+    width: 90%; 
+    overflow: auto;
+}
+.actions
+{
+    margin: 4px 0px 4px 0px; 
+    display: flex;
+}
+.header_txt
+{
+    margin-left: 30px;
 }

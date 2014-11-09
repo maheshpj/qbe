@@ -2,16 +2,23 @@
 {% load i18n %}
 {% block title %}QBE App{% endblock title %}
 
-
 {% block nav %}
     {% include "qbeapp/nav.html" %}
 {% endblock nav %}
 
 {% block design %}
     {% include "qbeapp/design.html" %}
-    
-    <div style="margin: 4px 0px 0px 0px">
-        <input type="submit" value="Run" style="width:100px; height: 30px; border-radius: 30px;">
+    <div id="actions" class="actions">
+        <div>
+            <input id="runbtn" type="button" value="Run" class="run">
+        </div>
+        
+        <div id="clear_all" class="clear_all">        
+            <a href="">Clear all</a>
+        </div>
     </div>
 {% endblock design %}
-</form>
+
+{% block report %}
+    {% include "qbeapp/report.html" %}
+{% endblock report %}

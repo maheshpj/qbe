@@ -5,15 +5,20 @@
         <title>{% block title %}{% endblock title %}</title>        
         {% load staticfiles %}
         <link rel="stylesheet" type="text/css" href="{% static 'qbeapp/style.css' %}"/>
-        <script type="text/javascript" src="{% static 'qbeapp/qbeapp.js' %}"></script>
+        <script src="{% static 'qbeapp/qbeapp.js' %}"></script>
+        <script src="{% static 'qbeapp/jquery-1.11.1.min.js' %}"></script>
+        <script src="{% static 'qbeapp/ajaxed.js' %}"></script>
     </head>
 
     <body>
         <header>
-            <h1>Welcome to QBE</h1>            
+            <div class="header_txt">
+                <h1>Welcome to QBE</h1>
+            </div>            
         </header>
         
-        <form action="/report/" method="post">{% csrf_token %} 
+        <form id="qbeform" action="/report/" method="post">
+            {% csrf_token %} 
             <content> 
                 <nav> 
                     {% block nav %}{% endblock nav %}
@@ -24,7 +29,7 @@
                     </design> 
             
                     <report> 
-                        {% block report %}report{% endblock report %}
+                        {% block report %}{% endblock report %}
                     </report> 
                 </action>            
             </content>
