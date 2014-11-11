@@ -31,7 +31,7 @@ $(document).ready(function () {
             $("#reporttbl").empty().append(report_data);
         })
         .fail(function (data) {
-            $("#reportfor_err").html("<div class='errorlist'>Report for is required field</div>");
+            $("#reportfor_err").html("<div class='errorlist'>Some error occurred!!!</div>");
         });
     });
 })
