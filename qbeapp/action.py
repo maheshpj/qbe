@@ -23,19 +23,27 @@ ON = "ON"
 def join_on(kee, join_dict):
     return DOT.join([kee, join_dict.get(kee)])
 
-def get_from_part(root, selected_tables):
-    g = create_db_graph()
+def create_subgraph(g, root, selected_tables):
     join_tables = []
     for sel_table in selected_tables:
         join_tables = join_tables + nx.shortest_path(g, root, sel_table)
     join_subgraph = nx.subgraph(g, set(join_tables))
+    return join_subgraph
+
+def get_from_part(root, selected_tables):
+    g = create_db_graph()
+    pk_dict = create_primary_key_dict()
+    join_subgraph = create_subgraph(g, root, selected_tables)
     joins = []
     joined_tables = []
     for edge in join_subgraph.edges():
-        join_dict = g[edge[0]][edge[1]]['join'] 
+        join_dict = g[edge[0]][edge[1]]['fk'] 
         kees = join_dict.keys()
+        pk_tbl = edge[0]      
+        if edge[0] == kees[0]:
+            pk_tbl = edge[1]            
         on_val = ' = '.join((join_on(kees[0], join_dict), 
-                             join_on(kees[1], join_dict)))
+                             DOT.join([pk_tbl, pk_dict[pk_tbl]])))
         inner_join_table = edge[0]
         if edge[0] in joined_tables or edge[0] == root:
             inner_join_table = edge[1]
@@ -45,11 +53,32 @@ def get_from_part(root, selected_tables):
     from_str = SPACE.join([root, joins_str]) 
     return from_str
 
+def create_primary_key_dict():    
+    """
+    Creates table and its primary key relation dictionary like {'tablename': 'pk_column'}
+    returns dictionary
+    """
+    primary_key_dict = {}
+    for t in get_sorted_tbls():
+        for pk in t.primary_key:
+            pk = str(pk)
+            if DOT in pk:
+                tbl_pk = pk.split(DOT)
+                primary_key_dict[tbl_pk[0]] = tbl_pk[1]
+    return primary_key_dict
+    
 def create_db_graph():
-    g = nx.Graph()
-    g.add_edge('auth_user', 'auth_user_groups', join={'auth_user':'id', 'auth_user_groups':'user_id'})
-    g.add_edge('auth_group', 'auth_user_groups', join={'auth_group':'id', 'auth_user_groups':'group_id'})
-    return g
+    """
+    Creates database graph using edge like {'pk_table', 'fk_table', fk={'fk_table': 'fk_column'}}
+    returns networkx graph object
+    """
+    graph = nx.Graph()
+    for tbl in get_sorted_tbls():
+        for clm in tbl.columns:
+            for fk in clm.foreign_keys:
+                graph.add_edge(str(fk.column.table), str(clm.table), 
+                               fk={str(clm.table): str(clm.name)})
+    return graph
 
 
 def get_sidebar_tables():
@@ -57,11 +86,6 @@ def get_sidebar_tables():
     
 def get_design_field_forms():  
     return get_table_clm_tuple()    
-    
-def get_report_from_data(report_for, report_data):
-    query = generate_sql(report_for, report_data)
-    print 'Query: ' + query
-    return get_query_results(query)
         
 def generate_sql(report_for, report_data):
     """
@@ -87,3 +111,8 @@ def get_table_from_field(field):
         
 def parse_table_clm_from_field(field):
     return field.split(DOT)
+    
+def get_report_from_data(report_for, report_data):    
+    query = generate_sql(report_for, report_data)
+    results = get_query_results(query)
+    return {'query': query, 'results': results}
