@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}QBE App{% endblock title %}
+
+{% block nav %}
+    {% include "qbeapp/nav.html" %}
+{% endblock nav %}
+
+{% block design %}
+    {% include "qbeapp/design.html" %}
+    <div id="actions" class="actions">
+        <div>
+            <input id="runbtn" type="button" value="Run" class="run">
+        </div>
+        
+        <div id="clear_all" class="clear_all">        
+            <a href="">Clear all</a>
+        </div>
+    </div>
+{% endblock design %}
+
+{% block report %}
+    {% include "qbeapp/report.html" %}
+{% endblock report %}

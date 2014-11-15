@@ -1,0 +1,43 @@
+<div id="reporttbl">
+    
+    {% if query %}
+    <div id="query-div" style="border: 1px dashed grey; padding: 5px; margin: 5px 0 5px 0;">
+        <p style="color: #CC6633">{{ query }}</p>
+    </div>
+    {% endif %}
+
+    {% if report %}
+    <div id="report_div">
+        <table width="100%" class="report_grid">
+            {% spaceless %}
+                <tr>
+                    {% for clm in header %}
+                    <th>
+                        {{ clm }}
+                    </th>
+                    {% endfor %}
+                </tr>
+            {% for row in report %}
+                {% if forloop.last %} 
+                <tr>
+                    {% for item in row %}
+                    <td style="border-bottom: 0">
+                        {{ item }}    
+                    </td> 
+                    {% endfor%}      
+                </tr>
+                {% else %}    
+                <tr>
+                    {% for item in row %}
+                    <td>
+                        {{ item }}    
+                    </td>
+                    {% endfor%}
+                </tr>
+                {% endif %}
+            {% endfor%}
+            {% endspaceless %}
+        </table>
+    </div>
+    {% endif %}
+</div>
