@@ -1,16 +1,29 @@
 Query By Example [QBE]
 ======================
 
+What is it?
+-----------
+
 QBE will generate SQL statement dynamically depending on users inputs and show the results
 
-Python 2.7
+Tech Stack
+----------
 
-Framework: Django
+	Python 2.7
+	Framework: Django
+	JQuery 1.11.1
+	Default database: Sqlite3	
 
-JQuery 1.11.1
-
-Libraries used:
+Libraries used
+--------------
 
 	- Sqlalchemy [http://www.sqlalchemy.org/]
+	- NetworkX   [https://networkx.github.io/] 	
 	
-Default database: Sqlite3	
+How to test
+-----------
+
+	Go to qbe folder
+	run command: python manage.py runserver
+	open http://localhost:8000/
+	
