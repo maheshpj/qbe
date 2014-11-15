@@ -18,7 +18,7 @@ def index(request, template_name=TEMPLATE_INDEX):
     Displays the sidebar table tree and design fields view      
     """
     clear_design_fields()
-    c =  {"tables": get_sidebar_tables(), 
+    c = {"tables": get_sidebar_tables(), 
           "form": QbeForm(), 
           "design_fields": get_design_formset()}    
     return render_to_response(template_name, c)
@@ -60,8 +60,12 @@ def get_report(request, template_name=TEMPLATE_INDEX):
             if is_valid_design_field(f.cleaned_data):
                 report_data.append(f.cleaned_data['field'])
         report = get_report_from_data(report_for, report_data)
-    c =  {"form": form, "report": report}    
-    return render_to_response(template_name, c)    
+        c = {"form": form, 
+             "query": report['query'], 
+             "header": report_data,
+             "report": report['results']}    
+        return render_to_response(template_name, c)
+    return redirect(template_name, "form")    
                                     
 def is_valid_design_field(design_field):
     """

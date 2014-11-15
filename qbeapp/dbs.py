@@ -7,7 +7,7 @@ Created on Thu Nov 06 13:39:44 2014
 This module uses Sqlalchemy library to fetch database metadata from various 
 databases and also executes the auto generate sql statement to fetch records
 """
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, MetaData
 from sqlalchemy.engine import reflection
 from sqlalchemy.sql import text
 from django.conf import settings
@@ -15,6 +15,19 @@ from django.conf import settings
 engine = create_engine('sqlite:///' + settings.DATABASES['default']['NAME'])
 insp = reflection.Inspector.from_engine(engine)
 table_dict = {}
+sorted_tbls = []
+
+def get_sorted_tbls(eng=engine):
+    global sorted_tbls
+    if not sorted_tbls:
+        print 'Getting sorted tables...'
+        sorted_tbls = get_db_metadata(eng).sorted_tables
+    return sorted_tbls
+
+def get_db_metadata(eng=engine):
+    metadata = MetaData(eng)
+    metadata.reflect(bind=eng)
+    return metadata
 
 def get_table_names(schema=None, order_by=None):
     return insp.get_table_names(schema, order_by)
@@ -34,7 +47,7 @@ def get_tables(schema=None, order_by=None):
     dictionary having tablename as key and its columns as value
     """
     global table_dict
-    if not len(table_dict) > 0:
+    if not table_dict:
         table_dict = dict(map(get_table_clms, 
                               get_table_names(schema, order_by)))    
     return table_dict

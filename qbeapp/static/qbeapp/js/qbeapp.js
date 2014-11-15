@@ -13,7 +13,7 @@ function addElement(cb, table, clm) {
     var el_hid = document.getElementById(hid_id)
     if (cb.checked == true) {
         el_form.style.display = 'inline-block';
-        el_hid.value = table + '.' + clm;        
+        el_hid.value = table + '.' + clm;
     } else {
         el_form.style.display = 'none';
         el_hid.value = '';
