@@ -28,10 +28,14 @@ $(document).ready(function () {
         $.post("/report/", $("#qbeform").serialize())
         .done(function (data) {
             var report_data = $(data).find("#reporttbl");
+            var errors = $(data).find("#reportfor");
+
             $("#reporttbl").empty().append(report_data);
+            $("#reportfor").empty().append(errors);
         })
-        .fail(function (data) {
-            $("#reportfor_err").html("<div class='errorlist'>Some error occurred!!!</div>");
+        .fail(function (xhr, errmsg, err) {
+            $("#reportfor_err").html("<div class='errorlist'>" + err + "</div>");
+            console.log(xhr.status + ": " + xhr.responseText);
         });
     });
 })

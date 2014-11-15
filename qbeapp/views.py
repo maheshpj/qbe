@@ -53,6 +53,7 @@ def get_report(request, template_name=TEMPLATE_INDEX):
     form = QbeForm(request.POST or None)
     DesignFieldFormset = formset_factory(DesignFieldForm)
     formset = DesignFieldFormset(request.POST or None)
+    c = {}
     if form.is_valid() and formset.is_valid():
         report_for = form.cleaned_data['report_for']
         report_data = []
@@ -63,9 +64,11 @@ def get_report(request, template_name=TEMPLATE_INDEX):
         c = {"form": form, 
              "query": report['query'], 
              "header": report_data,
-             "report": report['results']}    
-        return render_to_response(template_name, c)
-    return redirect(template_name, "form")    
+             "report": report['results']}
+    else:
+        errs = form.errors
+        c = {"form": form, "qbeerrors": errs}
+    return render_to_response(template_name, c)   
                                     
 def is_valid_design_field(design_field):
     """
