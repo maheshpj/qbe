@@ -6,7 +6,6 @@ Created on Thu Nov 16 2014
 
 """
 
-
 SELECT = "SELECT"
 FROM = "FROM"
 WHERE = "WHERE"

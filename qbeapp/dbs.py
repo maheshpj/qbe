@@ -45,8 +45,8 @@ def get_table_clms(table_name, schema=None):
     
 def get_tables(schema=None, order_by=None):
     """
-    Fetches the database metadata for tablename and its columns and returns the
-    dictionary having tablename as key and its columns as value
+    Fetches the database metadata for tablename and its columns 
+    returns the dictionary having tablename as key and its columns as value
     """
     global table_dict
     if not table_dict:
