@@ -9,7 +9,9 @@ from django.views.decorators.csrf import csrf_exempt
 from django.forms.formsets import formset_factory
 from qbeapp.forms import *
 from qbeapp.action import *
+import logging
 
+logger = logging.getLogger(__name__)
 design_fields = []
 TEMPLATE_INDEX = "qbeapp/index.html"
 
@@ -55,19 +57,23 @@ def get_report(request, template_name=TEMPLATE_INDEX):
     formset = DesignFieldFormset(request.POST or None)
     c = {}
     if form.is_valid() and formset.is_valid():
-        report_for = form.cleaned_data['report_for']
         report_data = []
-        for f in formset.forms: 
-            if is_valid_design_field(f.cleaned_data):
-                report_data.append(f.cleaned_data['field'])
-        report = get_report_from_data(report_for, report_data)
+        try:
+            for f in formset.forms: 
+                if is_valid_design_field(f.cleaned_data):
+                    logger.info("Form data: ", f.cleaned_data)
+                    report_data.append(f.cleaned_data['field'])                    
+            report_for = form.cleaned_data['report_for']    
+            report = get_report_from_data(report_for, report_data)
+        except:
+            logger.exception()
         c = {"form": form, 
              "query": report['query'], 
              "header": report_data,
              "report": report['results']}
     else:
-        errs = form.errors
-        c = {"form": form, "qbeerrors": errs}
+        c = {"form": form, "qbeerrors": form.errors}
+        logger.error('Invalid form: %s ', form.errors)
     return render_to_response(template_name, c)   
                                     
 def is_valid_design_field(design_field):

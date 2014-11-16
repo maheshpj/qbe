@@ -11,7 +11,9 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy.engine import reflection
 from sqlalchemy.sql import text
 from django.conf import settings
+import logging
 
+logger = logging.getLogger(__name__)
 engine = create_engine('sqlite:///' + settings.DATABASES['default']['NAME'])
 insp = reflection.Inspector.from_engine(engine)
 table_dict = {}
@@ -20,7 +22,7 @@ sorted_tbls = []
 def get_sorted_tbls(eng=engine):
     global sorted_tbls
     if not sorted_tbls:
-        print 'Getting sorted tables...'
+        logger.info('Getting sorted tables...')
         sorted_tbls = get_db_metadata(eng).sorted_tables
     return sorted_tbls
 

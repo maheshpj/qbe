@@ -7,6 +7,9 @@ Created on Sun Nov 09 15:30:08 2014
 
 from qbeapp.dbs import *
 import networkx as nx
+import logging
+
+logger = logging.getLogger(__name__)
 
 SELECT = "SELECT"
 FROM = "FROM"
@@ -65,6 +68,8 @@ def create_primary_key_dict():
             if DOT in pk:
                 tbl_pk = pk.split(DOT)
                 primary_key_dict[tbl_pk[0]] = tbl_pk[1]
+            else:
+                logger.debug("No Primary Key column:" + pk)
     return primary_key_dict
     
 def create_db_graph():
