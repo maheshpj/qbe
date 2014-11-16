@@ -8,8 +8,9 @@
                         {% spaceless %}                            
                             <p>
                                 <input type="checkbox" 
-                                    onclick="addElement(this, '{{ key }}', '{{ clm.name }}')">                            
-                                {{ clm.name }}
+                                    onclick="addElement(this, '{{ key }}', '{{ clm.name }}')">  
+                                {% load qbe_extras %}                          
+                                {{ clm.name }} <label style="color: #c1b8b8">({{ clm.type|class_name|lower|capfirst }})</label>
                             </p>           
                         {% endspaceless %}
                     </li>
