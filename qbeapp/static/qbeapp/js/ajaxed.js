@@ -10,12 +10,13 @@ $(document).ready(function () {
         paddingTop: "0px",
         paddingBottom: "0px",
         position: "absolute",
-        right: "50%",
+        right: "43%",
         top: "3px",
         width: "200px",
-        height: "30px",
+        height: "20px",
         border: "1px dotted #E6E65C",
-        background: "#FFFF66"
+        background: "#FFFF33",
+        textAlign: "center",
     });
 
     $(document).ajaxStart(function () {
