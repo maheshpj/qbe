@@ -32,6 +32,8 @@ class DesignFieldForm(forms.Form):
     exclude = forms.BooleanField(required=False)
     sort = forms.BooleanField(required=False)
     total = forms.ChoiceField(choices=utils.AGGREGATION, required=False)
+    operator = forms.ChoiceField(choices=utils.OPERATORS, required=False)
+    oroperator = forms.ChoiceField(choices=utils.OPERATORS, required=False)
     criteria = forms.CharField(max_length=1000, required=False)
     orcriteria = forms.CharField(max_length=1000, required=False)
                                 

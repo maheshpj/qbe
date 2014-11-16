@@ -71,6 +71,11 @@ def get_query_orderby(report_data):
     order_by = COMMA.join(sorts)
     return order_by
 
+def create_criteria(data, cr):
+    return SPACE.join((data['field'], 
+                       data['operator'], 
+                       quote_str(data[cr])))
+
 def get_query_where(report_data):
     """
     Create and returns where clause
@@ -79,11 +84,9 @@ def get_query_where(report_data):
     ors = []
     for data in report_data:
         if data['criteria']:
-            cr = quote_str(data['criteria'])
-            wheres.append("=".join((data['field'], cr)))
+            wheres.append(create_criteria(data, 'criteria'))
         if data['orcriteria']:
-            cr = quote_str(data['orcriteria'])
-            ors.append("=".join((data['field'], cr)))
+            ors.append(create_criteria(data, 'orcriteria'))
     and_whr = AND.join(wheres)
     where = and_whr  
     if ors:

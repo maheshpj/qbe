@@ -51,7 +51,7 @@
             {% for design_field_form in design_fields.forms %}  
                      
             <div id="div-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
-                style="width:210px;display: {{design_field_form.style_display }}">
+                style="width:260px; display: {{design_field_form.style_display }}">
                 <input type="hidden" 
                     id="cnt-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
                     value="{{ forloop.counter0 }}">
@@ -84,12 +84,14 @@
                     </tr>
                     <tr>
                         <td>
+                            {{ design_field_form.operator }}
                             {{ design_field_form.criteria }}
                             {{ design_field_form.errors }} 
                         </td>
                     </tr>
                     <tr>
                         <td style="border-bottom: 0px">
+                            {{ design_field_form.oroperator }}
                             {{ design_field_form.orcriteria }}
                             {{ design_field_form.errors }} 
                         </td>
