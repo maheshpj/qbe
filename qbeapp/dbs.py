@@ -13,7 +13,7 @@ from sqlalchemy.sql import text
 from django.conf import settings
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('qbe.log')
 engine = create_engine('sqlite:///' + settings.DATABASES['default']['NAME'])
 insp = reflection.Inspector.from_engine(engine)
 table_dict = {}
@@ -72,6 +72,7 @@ def create_sql_from_sqlstr(sqlstr):
     """
     Create and returns the sqlalchemy text sql using provided sql string
     """
+    logger.debug("QBE Query: " + sqlstr)
     return text(sqlstr)
     
 def execute_sql(sql):

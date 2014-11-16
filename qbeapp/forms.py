@@ -31,7 +31,7 @@ class DesignFieldForm(forms.Form):
     column_name = ""
     style_display = "none"
     field = forms.CharField(required=False, widget=forms.HiddenInput())
-    show = forms.BooleanField(required=False)
+    exclude = forms.BooleanField(required=False)
     sort = forms.BooleanField(required=False)
     total = forms.ChoiceField(choices=AGGREGATION, required=False)
     criteria = forms.CharField(max_length=1000, required=False)

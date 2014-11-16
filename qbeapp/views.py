@@ -8,10 +8,10 @@ from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.formsets import formset_factory
 from qbeapp.forms import *
-from qbeapp.action import *
+import qbeapp.action as axn 
 import logging
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('qbe.log')
 design_fields = []
 TEMPLATE_INDEX = "qbeapp/index.html"
 
@@ -20,7 +20,7 @@ def index(request, template_name=TEMPLATE_INDEX):
     Displays the sidebar table tree and design fields view      
     """
     clear_design_fields()
-    c = {"tables": get_sidebar_tables(), 
+    c = {"tables": axn.get_sidebar_tables(), 
           "form": QbeForm(), 
           "design_fields": get_design_formset()}    
     return render_to_response(template_name, c)
@@ -29,7 +29,7 @@ def get_design_formset():
     """
     Creates design field formset using columns available and returns formset    
     """                       
-    design_field_forms = get_design_field_forms()
+    design_field_forms = axn.get_design_field_forms()
     DesignFieldFormset = formset_factory(DesignFieldForm, 
                                          extra=len(design_field_forms))
     formset = create_formset_from_tables(DesignFieldFormset(), 
@@ -61,16 +61,17 @@ def get_report(request, template_name=TEMPLATE_INDEX):
         try:
             for f in formset.forms: 
                 if is_valid_design_field(f.cleaned_data):
-                    logger.info("Form data: ", f.cleaned_data)
-                    report_data.append(f.cleaned_data['field'])                    
+                    logger.debug("Submitted report data: " + str(f.cleaned_data))
+                    report_data.append(f.cleaned_data)
             report_for = form.cleaned_data['report_for']    
-            report = get_report_from_data(report_for, report_data)
+            report = axn.get_report_from_data(report_for, report_data)
+            header = axn.get_header(report_data)
+            c = {"form": form, 
+                 "query": report['query'], 
+                 "header": header,
+                 "report": report['results']}
         except:
-            logger.exception()
-        c = {"form": form, 
-             "query": report['query'], 
-             "header": report_data,
-             "report": report['results']}
+            logger.exception("An error occurred")
     else:
         c = {"form": form, "qbeerrors": form.errors}
         logger.error('Invalid form: %s ', form.errors)
