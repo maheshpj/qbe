@@ -9,9 +9,7 @@ This module contains the qbe form and design fields formset classes
 
 from django import forms
 from qbeapp.dbs import get_table_names
-
-AGGREGATION = (('', ''), ('avg', 'avg'), ('count', 'count'), ('max', 'max'),
-    ('min', 'min'), ('sum', 'sum'), ('group by', 'group by'))
+import qbeapp.utils as utils
 
 def report_for_mapping(table):
     return (table, table)
@@ -33,7 +31,7 @@ class DesignFieldForm(forms.Form):
     field = forms.CharField(required=False, widget=forms.HiddenInput())
     exclude = forms.BooleanField(required=False)
     sort = forms.BooleanField(required=False)
-    total = forms.ChoiceField(choices=AGGREGATION, required=False)
+    total = forms.ChoiceField(choices=utils.AGGREGATION, required=False)
     criteria = forms.CharField(max_length=1000, required=False)
     orcriteria = forms.CharField(max_length=1000, required=False)
                                 

@@ -22,6 +22,10 @@ ON = "ON"
 AND = "AND"
 OR = "OR"
 
+AGGREGATION = (('', ''), ('avg', 'avg'), ('count', 'count'), ('max', 'max'),
+    ('min', 'min'), ('sum', 'sum'), ('upper', 'upper'), ('lower', 'lower'), 
+    ('len', 'len')('group by', 'group by'))
+
 def quote_str(str):
     return "'" + str + "'"
 
