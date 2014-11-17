@@ -24,4 +24,7 @@ def get_report_from_data(report_for, report_data):
 
 def get_header(report_data):
     return qry.get_included_fields(report_data)
+    
+def change_db(db_key):
+    db.manage_engine(db_key)    
 

@@ -24,6 +24,14 @@ def index(request, template_name=TEMPLATE_INDEX):
           "form": QbeForm(), 
           "design_fields": get_design_formset()}    
     return render_to_response(template_name, c)
+    
+def change_db(request, db_key, template_name=TEMPLATE_INDEX):
+    axn.change_db(db_key)
+    clear_design_fields()
+    c = {"tables": axn.get_sidebar_tables(), 
+          "form": QbeForm(), 
+          "design_fields": get_design_formset()}    
+    return render_to_response(template_name, c)
 
 def get_design_formset():
     """

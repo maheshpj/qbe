@@ -16,6 +16,11 @@ import qbeapp.utils as utils
 import logging
 
 logger = logging.getLogger('qbe.log')
+engine = None
+insp = None
+
+table_dict = {}
+sorted_tbls = []
 
 def get_db_dict(db='default'):
     return settings.DATABASES[db]
@@ -23,17 +28,19 @@ def get_db_dict(db='default'):
 def get_drivername_from_engine(engine):
     return utils.DATABASE_ENGINES.get(engine, "Driver name not found.") 
 
-db = get_db_dict()
-database_url = URL(get_drivername_from_engine(db['ENGINE']),
-                   username=db['USER'], 
-                   password=db['PASSWORD'], 
-                   host=db['HOST'], 
-                   port=db['PORT'],
-                   database=db['NAME'])
-engine = create_engine(database_url)
-insp = reflection.Inspector.from_engine(engine)
-table_dict = {}
-sorted_tbls = []
+def manage_engine(db_key='default'):
+    db = get_db_dict(db_key)
+    database_url = URL(get_drivername_from_engine(db['ENGINE']),
+                       username=db['USER'], 
+                       password=db['PASSWORD'], 
+                       host=db['HOST'], 
+                       port=db['PORT'],
+                       database=db['NAME'])
+    global engine, insp                   
+    engine = create_engine(database_url)
+    insp = reflection.Inspector.from_engine(engine)
+
+manage_engine()
 
 def get_sorted_tbls(eng=engine):
     global sorted_tbls
