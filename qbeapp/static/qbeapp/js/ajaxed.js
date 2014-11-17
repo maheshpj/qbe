@@ -39,4 +39,14 @@ $(document).ready(function () {
             console.log(xhr.status + ": " + xhr.responseText);
         });
     });
+
+    $("#showGraphBtn").click(function (event) {
+        $.post("/draw/", $("#qbeform").serialize())
+        .done(function (data) {
+        })
+        .fail(function (xhr, errmsg, err) {
+            $("#reportfor_err").html("<div class='errorlist'>" + err + "</div>");
+            console.log(xhr.status + ": " + xhr.responseText);
+        });
+    });
 })

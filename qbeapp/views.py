@@ -4,10 +4,11 @@ Created on Thu Nov 06 13:39:44 2014
 
 @author: Mahesh.Jadhav
 """
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.formsets import formset_factory
 from qbeapp.forms import *
+from django.template import RequestContext
 import qbeapp.action as axn 
 import logging
 
@@ -20,6 +21,7 @@ def index(request, template_name=TEMPLATE_INDEX):
     Displays the sidebar table tree and design fields view      
     """
     clear_design_fields()
+    axn.init_qbe()
     c = {"tables": axn.get_sidebar_tables(), 
           "form": QbeForm(), 
           "design_fields": get_design_formset()}    
@@ -90,4 +92,9 @@ def is_valid_design_field(design_field):
     Checks if submitted field is valid or not and returns True/False
     """
     return design_field and design_field['field']
+
+@csrf_exempt
+def draw_graph(request):
+    axn.draw_graph()
+    return redirect('/')
         

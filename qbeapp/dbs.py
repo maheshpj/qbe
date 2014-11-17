@@ -7,11 +7,16 @@ Created on Thu Nov 06 13:39:44 2014
 This module uses Sqlalchemy library to fetch database metadata from various 
 databases and also executes the auto generate sql statement to fetch records
 """
-from sqlalchemy import create_engine, MetaData
-from sqlalchemy.engine import reflection
-from sqlalchemy.sql import text
+try:
+    from sqlalchemy import create_engine, MetaData
+    from sqlalchemy.engine import reflection
+    from sqlalchemy.sql import text
+    from sqlalchemy.engine.url import URL
+except ImportError:
+    import sys
+    print("sqlalchemy needed for database communication. Skipping")
+    sys.exit(0)
 from django.conf import settings
-from sqlalchemy.engine.url import URL
 import qbeapp.utils as utils
 import logging
 

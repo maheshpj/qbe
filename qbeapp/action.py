@@ -7,6 +7,7 @@ Created on Sun Nov 09 15:30:08 2014
 
 import qbeapp.dbs as db
 import qbeapp.query as qry
+import qbeapp.joins as grph
 import logging
 
 logger = logging.getLogger('qbe.log')
@@ -26,5 +27,12 @@ def get_header(report_data):
     return qry.get_included_fields(report_data)
     
 def change_db(db_key):
-    db.manage_engine(db_key)    
+    db.manage_engine(db_key)  
+    
+def init_qbe():
+    grph.create_db_graph()
+    grph.create_primary_key_dict()      
+
+def draw_graph():
+    grph.draw_graph(grph.get_db_graph())
 

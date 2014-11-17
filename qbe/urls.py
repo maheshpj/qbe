@@ -6,4 +6,5 @@ urlpatterns = patterns('',
     url(r'^$', 'qbeapp.views.index', name='index'),   
     url(r'^report/$', 'qbeapp.views.get_report', name='report'), 
     url(r'^db/(?P<db_key>\w+)/$', 'qbeapp.views.change_db', name='change_db'), 
+    url(r'^draw/$', 'qbeapp.views.draw_graph', name='draw_graph'), 
 )

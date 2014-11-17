@@ -141,9 +141,11 @@ maindesign {
 }
 
 .run {
-    width: 100px;
+    width: 180px;
     height: 30px;
     border-radius: 30px;
+    margin-right: 5px;
+    color: maroon;
 }
 
 .sheet {
