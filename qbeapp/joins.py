@@ -113,7 +113,7 @@ def draw_graph(graph, labels=None,
                graph_layout='shell',
                node_size=1600, 
                node_color='blue', 
-               node_alpha=0.3,
+               node_alpha=0.4,
                node_text_size=10,
                edge_color='grey', 
                edge_alpha=0.3, 
@@ -147,5 +147,21 @@ def draw_graph(graph, labels=None,
 
     nx.draw_networkx_edge_labels(graph, graph_pos, edge_labels=edge_labels, 
                                  label_pos=edge_text_pos)
+
+    font = {'fontname'   : 'Helvetica',
+            'color'      : 'm',
+            'fontweight' : 'bold',
+            'fontsize'   : 14}
+    plt.title("Database Tables Graph", font)
+
+    font = {'fontname'   : 'Helvetica',
+            'color'      : 'r',
+            'fontweight' : 'bold',
+            'fontsize'   : 14}
+
+    plt.text(0.5, 0.97, "edge = foreign key relationship",
+             horizontalalignment='center',
+             transform=plt.gca().transAxes)
+    plt.axis('off')
     # show graph
     plt.show()
