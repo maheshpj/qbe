@@ -97,4 +97,44 @@ def is_valid_design_field(design_field):
 def draw_graph(request):
     axn.draw_graph()
     return redirect('/')
+
+import csv
+from django.http import HttpResponse
+import time
+import datetime
+
+@csrf_exempt
+def export_csv(request):
+    # Create the HttpResponse object with the appropriate CSV header.
+    response = HttpResponse(content_type='text/csv')
+    ts = time.time()
+    st = datetime.datetime.fromtimestamp(ts).strftime('%Y-%m-%d_%H-%M-%S')
+    filename = "qbe-report" + str(st) + ".csv"
+    response['Content-Disposition'] = 'attachment; filename=' + filename
+
+    form = QbeForm(request.POST or None)
+    DesignFieldFormset = formset_factory(DesignFieldForm)
+    formset = DesignFieldFormset(request.POST or None)
+    results = None
+    header = None
+    if form.is_valid() and formset.is_valid():
+        report_data = []
+        try:
+            for f in formset.forms: 
+                if is_valid_design_field(f.cleaned_data):
+                    logger.debug("Submitted report data: " + str(f.cleaned_data))
+                    report_data.append(f.cleaned_data)
+            report_for = form.cleaned_data['report_for']    
+            report = axn.get_report_from_data(report_for, report_data)
+            header = axn.get_header(report_data)
+            results = report['results']
+        except:
+            logger.exception("An error occurred")
+
+    writer = csv.writer(response)
+    writer.writerow(header)
+    for row in results:
+        writer.writerow(row)
+
+    return response
         
