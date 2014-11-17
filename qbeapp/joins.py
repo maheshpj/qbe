@@ -163,5 +163,6 @@ def draw_graph(graph, labels=None,
              horizontalalignment='center',
              transform=plt.gca().transAxes)
     plt.axis('off')
+    plt.savefig("db_tbls_graph.png")
     # show graph
     plt.show()
