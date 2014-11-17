@@ -22,10 +22,11 @@ AND = "AND"
 OR = "OR"
 
 AGGREGATION = (('', ''), ('avg', 'avg'), ('count', 'count'), ('max', 'max'), 
-               ('min', 'min'), ('sum', 'sum'), ('upper', 'upper'), ('lower', 'lower'), 
-               ('len', 'len'), ('group by', 'group by'))
+               ('min', 'min'), ('sum', 'sum'), ('upper', 'upper'), 
+               ('lower', 'lower'), ('group by', 'group by'))
 OPERATORS = (('=', '='), ('>=', '>='), ('<=', '<='), ('>', '>'), ('<', '<'), 
-             ('<>', '<>'), ('like', 'like'), ('between', 'between'), ('in', 'in'))
+             ('<>', '<>'), ('like', 'like'), ('between', 'between'), 
+             ('in', 'in'))
 
 def quote_str(str):
     return "'" + str + "'"
