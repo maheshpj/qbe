@@ -29,10 +29,10 @@ $(document).ready(function () {
         $.post("/report/", $("#qbeform").serialize())
         .done(function (data) {
             var report_data = $(data).find("#reporttbl");
-            var errors = $(data).find("#reportfor");
+            var errors = $(data).find("#reportfor_err");
 
             $("#reporttbl").empty().append(report_data);
-            $("#reportfor").empty().append(errors);
+            $("#reportfor_err").empty().append(errors);
         })
         .fail(function (xhr, errmsg, err) {
             $("#reportfor_err").html("<div class='errorlist'>" + err + "</div>");
