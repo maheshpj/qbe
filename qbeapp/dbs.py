@@ -11,10 +11,26 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy.engine import reflection
 from sqlalchemy.sql import text
 from django.conf import settings
+from sqlalchemy.engine.url import URL
+import qbeapp.utils as utils
 import logging
 
 logger = logging.getLogger('qbe.log')
-engine = create_engine('sqlite:///' + settings.DATABASES['default']['NAME'])
+
+def get_db_dict(db='default'):
+    return settings.DATABASES[db]
+    
+def get_drivername_from_engine(engine):
+    return utils.DATABASE_ENGINES.get(engine, "Driver name not found.") 
+
+db = get_db_dict()
+database_url = URL(get_drivername_from_engine(db['ENGINE']),
+                   username=db['USER'], 
+                   password=db['PASSWORD'], 
+                   host=db['HOST'], 
+                   port=db['PORT'],
+                   database=db['NAME'])
+engine = create_engine(database_url)
 insp = reflection.Inspector.from_engine(engine)
 table_dict = {}
 sorted_tbls = []

@@ -27,6 +27,15 @@ AGGREGATION = (('', ''), ('avg', 'avg'), ('count', 'count'), ('max', 'max'),
 OPERATORS = (('=', '='), ('>=', '>='), ('<=', '<='), ('>', '>'), ('<', '<'), 
              ('<>', '<>'), ('like', 'like'), ('between', 'between'), 
              ('in', 'in'))
+             
+DATABASE_ENGINES = {
+        'django.db.backends.postgresql_psycopg2': 'postgresql+psycopg2',
+        'django.db.backends.postgresql': 'postgresql',
+        'django.db.backends.mysql': 'mysql',
+        'django.db.backends.mssql': 'mssql',
+        'django.db.backends.sqlite3': 'sqlite',
+        'django.db.backends.oracle': 'oracle',
+        }              
 
 def quote_str(str):
     return "'" + str + "'"
