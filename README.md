@@ -24,6 +24,6 @@ How to test
 -----------
 
 	Go to qbe folder
-	run command: python manage.py runserver
+	run command: python manage.py runserver --nothreading --noreload
 	open http://localhost:8000/
 	
