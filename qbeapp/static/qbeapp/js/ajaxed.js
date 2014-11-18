@@ -49,4 +49,23 @@ $(document).ready(function () {
             console.log(xhr.status + ": " + xhr.responseText);
         });
     });
+
+    $("#exportBtn").click(function (event) {
+        $.post("/export/", $("#qbeform").serialize())
+        .done(function (data) {
+            window.URL = window.webkitURL || window.URL;
+            var contentType = 'text/csv';            
+            var csvFile = new Blob([data], {type: contentType});            
+            var a = document.createElement('a');
+            ts = event.timeStamp
+            a.download = 'qbe-export-' + ts + '.csv';
+            a.href = window.URL.createObjectURL(csvFile);
+            a.dataset.downloadurl = [contentType, a.download, a.href].join(':');
+            a.click();
+        })
+        .fail(function (xhr, errmsg, err) {
+            $("#reportfor_err").html("<div class='errorlist'>" + err + "</div>");
+            console.log(xhr.status + ": " + xhr.responseText);
+        });
+    });
 })

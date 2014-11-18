@@ -6,6 +6,9 @@ Created on Thu Nov 16 2014
 
 """
 
+import time
+import datetime
+
 SELECT = "SELECT"
 FROM = "FROM"
 WHERE = "WHERE"
@@ -42,3 +45,8 @@ def quote_str(str):
 
 def parenthesized_str(str):
     return "(" + str + ")"
+    
+def get_timestamp():
+    ts = time.time()
+    t_format = '%Y-%m-%d_%H-%M-%S'
+    return datetime.datetime.fromtimestamp(ts).strftime(t_format)    

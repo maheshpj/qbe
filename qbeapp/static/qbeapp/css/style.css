@@ -137,7 +137,6 @@ maindesign {
 .clear_all {
     align-self: center;
     position: relative;
-    right: -80%;
 }
 
 .run {
