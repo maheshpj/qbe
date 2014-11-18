@@ -7,4 +7,5 @@ urlpatterns = patterns('',
     url(r'^report/$', 'qbeapp.views.get_report', name='report'), 
     url(r'^db/(?P<db_key>\w+)/$', 'qbeapp.views.change_db', name='change_db'), 
     url(r'^draw/$', 'qbeapp.views.draw_graph', name='draw_graph'), 
+    url(r'^export/$', 'qbeapp.views.export_csv', name='export'),
 )
