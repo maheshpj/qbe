@@ -118,16 +118,19 @@ def export_csv(request):
     form = QbeForm(request.POST or None)
     DesignFieldFormset = formset_factory(DesignFieldForm)
     formset = DesignFieldFormset(request.POST or None)
+    report = None    
     if form.is_valid() and formset.is_valid():
         try:
             report_data = get_report_data(formset)
-            report_for = form.cleaned_data['report_for']    
-            report = axn.get_report_from_data(report_for, report_data) 
-            header = axn.get_header(report_data)
+            if report_data:
+                report_for = form.cleaned_data['report_for']    
+                report = axn.get_report_from_data(report_for, report_data) 
+                header = axn.get_header(report_data)
         except:
             logger.exception("An error occurred")
-    writer = csv.writer(response)
-    writer.writerow(header)
-    for row in report['results']:
-        writer.writerow(row)
+    if report:        
+        writer = csv.writer(response)
+        writer.writerow(header)
+        for row in report['results']:
+            writer.writerow(row)
     return response
