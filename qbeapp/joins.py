@@ -10,6 +10,7 @@ This module uses networkx graphs to create database tables graph using foreign k
 from qbeapp.utils import *
 import qbeapp.dbs as db
 import logging
+import qbeapp.errors as errs
 try:
     import networkx as nx
 except ImportError:
@@ -34,8 +35,11 @@ def build_subgraph(g, root, selected_tables):
     returns a subgraph
     """
     join_tables = []
-    for sel_table in selected_tables:
-        join_tables = join_tables + nx.shortest_path(g, root, sel_table)
+    try:
+        for sel_table in selected_tables:
+            join_tables = join_tables + nx.shortest_path(g, root, sel_table)
+    except:  
+        raise errs.QBEError("Invalid table relations.")
     join_subgraph = nx.subgraph(g, set(join_tables + selected_tables))
     return join_subgraph
 

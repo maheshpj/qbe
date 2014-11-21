@@ -13,6 +13,7 @@ import qbeapp.utils as utils
 import qbeapp.action as axn 
 import logging
 import csv
+import qbeapp.errors as errs
 
 logger = logging.getLogger('qbe.log')
 design_fields = []
@@ -74,12 +75,13 @@ def get_report(request, template_name=TEMPLATE_INDEX):
             report_for = form.cleaned_data['report_for']    
             report = axn.get_report_from_data(report_for, report_data)  
             header = axn.get_header(report_data)
-        except:
-            logger.exception("An error occurred")
-        ctx = {"form": form, 
-               "query": report['query'], 
-               "header": header,
-               "report": report['results']}    
+            ctx = {"form": form, 
+                   "query": report['query'], 
+                   "header": header,
+                   "report": report['results']}
+        except errs.QBEError as err:
+            logger.exception("An error occurred: " + err.value)
+            ctx = {"qbeerrors": err.value}    
     else:
         ctx = {"form": form, "qbeerrors": form.errors}
         logger.error('Invalid form: %s ', form.errors)

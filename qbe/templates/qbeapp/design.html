@@ -1,52 +1,12 @@
 <maindesign>
     <div id="reportfor" name="reportfor">
         {{ form.report_for }}  
-        <div id="reportfor_err" name="reportfor_err" style="display: inline-block">
+        <div id="reportfor_err" name="reportfor_err" style="display: inline-block"
+            class="errorlist">
             {{ qbeerrors }}
         </div> 
     </div>
     <subdesign>
-        <!--
-        <sidebar style="width:10%">
-            <table width="100%">
-                <tr>
-                    <td>
-                        <p>Field</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Table</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Exclude</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Sort</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Total</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>Criteria</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td style="border-bottom: 0px">
-                        <p>Or</p>
-                    </td>
-                </tr>
-            </table>                                     
-        </sidebar>
-        -->
         <div class="sheet" id="sheet">
             {{ design_fields.management_form }}
             {% for design_field_form in design_fields.forms %}  
