@@ -81,14 +81,17 @@ def join_on(kee, join_dict):
     return DOT.join([kee, join_dict.get(kee)]) 
     
 def build_inner_join(source, target):
-    join_dict = get_db_graph()[source][target]['fk'] 
+    try:
+        join_dict = get_db_graph()[source][target].get('fk')
+    except:
+        raise errs.QBEError("Invalid nodes.")       
     kees = join_dict.keys()
     pk_tbl = source    
     if pk_tbl == kees[0]:
         pk_tbl = target    
     pk_dict = get_db_pk_dict()         
     on_val = ' = '.join((join_on(kees[0], join_dict), 
-                         DOT.join([pk_tbl, pk_dict[pk_tbl]])))
+                         DOT.join([pk_tbl, pk_dict.get(pk_tbl)])))
     inner_join_str = SPACE.join([INNER, JOIN, target, ON, on_val])    
     return inner_join_str
     
