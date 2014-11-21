@@ -161,3 +161,11 @@ maindesign {
 .header_txt {
     margin-left: 30px;
 }
+
+.fieldname {
+    color: #6699FF;
+}
+
+.tablename {
+    color: #99CCFF;
+}
