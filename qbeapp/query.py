@@ -49,7 +49,7 @@ def get_query_tables(report_data):
     Returns set of tablenames from submitted report design fields data
     """
     fields = get_fields_from_report_data(report_data)
-    return set(map(get_table_from_field, fields))
+    return list(set(map(get_table_from_field, fields)))
 
 def get_table_from_field(field):
     """
