@@ -29,13 +29,13 @@ class DesignFieldForm(forms.Form):
     column_name = ""
     style_display = "none"
     field = forms.CharField(required=False, widget=forms.HiddenInput())
-    exclude = forms.BooleanField(required=False)
-    sort = forms.BooleanField(required=False)
+    exclude = forms.BooleanField(required=False, label='Exclude', help_text="exclude")
+    sort = forms.BooleanField(required=False, label='Sort', help_text="sort")
     total = forms.ChoiceField(choices=utils.AGGREGATION, required=False)
     operator = forms.ChoiceField(choices=utils.OPERATORS, required=False)
     oroperator = forms.ChoiceField(choices=utils.OPERATORS, required=False)
-    criteria = forms.CharField(max_length=1000, required=False)
-    orcriteria = forms.CharField(max_length=1000, required=False)
+    criteria = forms.CharField(max_length=1000, required=False, help_text="criteria")
+    orcriteria = forms.CharField(max_length=1000, required=False, help_text="or criteria")
                                 
 class QbeForm(forms.Form):
     report_for = forms.ChoiceField(choices=report_choices(), required=True)
