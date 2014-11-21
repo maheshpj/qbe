@@ -34,8 +34,12 @@ class DesignFieldForm(forms.Form):
     total = forms.ChoiceField(choices=utils.AGGREGATION, required=False)
     operator = forms.ChoiceField(choices=utils.OPERATORS, required=False)
     oroperator = forms.ChoiceField(choices=utils.OPERATORS, required=False)
-    criteria = forms.CharField(max_length=1000, required=False, help_text="criteria")
-    orcriteria = forms.CharField(max_length=1000, required=False, help_text="or criteria")
+    criteria = forms.CharField(widget=forms.TextInput(attrs=
+        {'placeholder': 'criteria'}), 
+        max_length=1000, required=False)
+    orcriteria = forms.CharField(widget=forms.forms.TextInput(attrs=
+        {'placeholder': 'or'}), 
+        max_length=1000, required=False)
                                 
 class QbeForm(forms.Form):
     report_for = forms.ChoiceField(choices=report_choices(), required=True)

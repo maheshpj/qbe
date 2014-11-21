@@ -6,6 +6,7 @@
         </div> 
     </div>
     <subdesign>
+        <!--
         <sidebar style="width:10%">
             <table width="100%">
                 <tr>
@@ -45,7 +46,7 @@
                 </tr>
             </table>                                     
         </sidebar>
-
+        -->
         <div class="sheet" id="sheet">
             {{ design_fields.management_form }}
             {% for design_field_form in design_fields.forms %}  
@@ -59,12 +60,12 @@
                 <table width="100%">
                     <tr>
                         <td>
-                            <p>{{ design_field_form.column_name }}</p>
+                            <p class="fieldname">{{ design_field_form.column_name }}</p>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <p>{{ design_field_form.table_name }}</p>
+                            <p class="tablename">{{ design_field_form.table_name }}</p>
                         </td>
                     </tr>
                     <tr>
@@ -79,7 +80,7 @@
                     </tr>
                     <tr>
                         <td>
-                            {{ design_field_form.total }}
+                            <p>{{ design_field_form.total }} Total</p>
                         </td>
                     </tr>
                     <tr>
