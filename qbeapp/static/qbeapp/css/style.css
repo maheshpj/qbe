@@ -43,7 +43,7 @@ ul.errorlist {
     display: block;
     font-size: 12px;
     margin: 0 0 3px;
-    padding: 4px 5px;
+    padding: 2px 4px 0px 6px;
 }
 
 body {
@@ -69,7 +69,7 @@ content {
 
 nav {
     float: left;
-    height: 500px;
+    height: 640px;
     overflow: auto;
     width: 25%;
 }
