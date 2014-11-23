@@ -8,7 +8,7 @@ class JoinsTestCase(TestCase):
                     'f': 'id', 'g': 'id', 'i': 'id', 'j': 'id', 'k': 'id',
                     'l': 'id'}
 
-    def setUp(self):
+    def dummy_graph(self):        
         graph = nx.Graph()
         graph.add_edge('a', 'b', fk={'b': 'fkid'})
         graph.add_edge('a', 'c', fk={'c': 'fkid'})
@@ -23,7 +23,10 @@ class JoinsTestCase(TestCase):
         graph.add_edge('j', 'k', fk={'k': 'fkid'})
         graph.add_edge('g', 'k', fk={'k': 'fkid'})
         graph.add_edge('g', 'l', fk={'l': 'fkid'})
-        jns.graph = graph
+        return graph
+
+    def setUp(self):
+        jns.graph = self.dummy_graph()
         jns.primary_key_dict = self.dummy_pk_dict
 
     def test_join_on(self):
