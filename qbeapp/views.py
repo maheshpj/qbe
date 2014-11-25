@@ -89,13 +89,16 @@ def get_report(request, page=None, template_name=TEMPLATE_INDEX):
     if form.is_valid() and formset.is_valid():
         try:   
             report_data = get_report_data(formset)            
-            report_for = form.cleaned_data['report_for']    
-            report = axn.get_report_from_data(report_for, report_data)  
-            records = paginate_report(report['results'], page)
-            ctx = {"form": form, 
-                   "query": report['query'], 
-                   "header": report['header'],
-                   "report": records}
+            report_for = form.cleaned_data['report_for']  
+            if report_data and report_for:                  
+                report = axn.get_report_from_data(report_for, report_data)  
+                records = paginate_report(report['results'], page)
+                ctx = {"form": form, 
+                       "query": report['query'], 
+                       "header": report['header'],
+                       "report": records}
+            else:
+                raise errs.QBEError("No valid data found for report.")
         except errs.QBEError as err:
             logger.exception("An error occurred: " + err.value)
             ctx = {"qbeerrors": err.value}    
@@ -124,7 +127,7 @@ def draw_graph(request):
     return redirect('/')
     
 @csrf_exempt
-def export_csv(request):
+def export_csv(request, template_name=TEMPLATE_INDEX):
     """    
     Create the HttpResponse object with the appropriate CSV header.
     returns response in csv format    
@@ -141,9 +144,15 @@ def export_csv(request):
     if form.is_valid() and formset.is_valid():
         try:
             report_data = get_report_data(formset)
-            if report_data:
-                report_for = form.cleaned_data['report_for']    
+            report_for = form.cleaned_data['report_for']  
+            if report_data and report_for:  
                 report = axn.get_report_from_data(report_for, report_data) 
+            else:
+                raise errs.QBEError("No valid data found for report.")
+        except errs.QBEError as err:
+            logger.exception("An error occurred: " + err.value)
+            ctx = {"qbeerrors": err.value}
+            return render_to_response(template_name, ctx) 
         except:
             logger.exception("An error occurred")
     if report:        
