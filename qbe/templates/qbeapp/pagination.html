@@ -1,0 +1,18 @@
+<div id="pagination" class="pagination">  
+    <span class="step-links">
+        {% if report.has_previous %}                                     
+            <input id="prvpage" type="hidden" value="{{ report.previous_page_number }}">
+            <input id="prevlink" type="button" value="previous" class="pg-btn">
+        {% endif %}
+
+        <span class="pg-current">
+            Page {{ report.number }} of {{ report.paginator.num_pages }}
+            [{{ report.paginator.count }}]
+        </span>
+
+        {% if report.has_next %}            
+            <input id="nxtpage" type="hidden" value="{{ report.next_page_number }}">
+            <input id="nextlink" type="button" value="next" class="pg-btn">      
+        {% endif %}   
+    </span>  
+</div>

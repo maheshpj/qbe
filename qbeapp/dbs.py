@@ -19,6 +19,7 @@ except ImportError:
 from django.conf import settings
 import qbeapp.utils as utils
 import logging
+import qbeapp.errors as errs
 
 logger = logging.getLogger('qbe.log')
 engine = None
@@ -108,5 +109,10 @@ def execute_sql(sql):
     Execute the sql and returns the records
     """
     connection = engine.connect()
-    results = connection.execute(sql).fetchall() 
+    try:
+        results = connection.execute(sql).fetchall() 
+    except:
+        raise errs.QBEError("Error while executing query. Invalid query.")
+    finally:
+        connection.close()
     return results    

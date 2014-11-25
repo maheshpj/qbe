@@ -21,7 +21,8 @@ def get_design_field_forms():
 def get_report_from_data(report_for, report_data):    
     query = qry.generate_sql(report_for, report_data)
     results = db.get_query_results(query)
-    return {'query': query, 'results': results}
+    header = get_header(report_data)
+    return {'query': query, 'results': results, 'header': header}
 
 def get_header(report_data):
     return qry.get_included_fields(report_data)
