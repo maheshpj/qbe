@@ -8,6 +8,7 @@ from django.shortcuts import render_to_response, redirect
 from django.views.decorators.csrf import csrf_exempt
 from django.forms.formsets import formset_factory
 from django.http import HttpResponse
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from qbeapp.forms import *
 import qbeapp.utils as utils
 import qbeapp.action as axn 
@@ -15,9 +16,11 @@ import logging
 import csv
 import qbeapp.errors as errs
 
+
 logger = logging.getLogger('qbe.log')
 design_fields = []
 TEMPLATE_INDEX = "qbeapp/index.html"
+PAGE_RECORDS = 25
 
 def index(request, template_name=TEMPLATE_INDEX):  
     """
@@ -60,11 +63,25 @@ def create_formset_from_tables(formset, design_field_forms):
 def clear_design_fields():
     del design_fields[:]
 
+def paginate_report(report, page):
+    paginator = Paginator(report, PAGE_RECORDS) 
+    try:
+        records = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        records = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        records = paginator.page(paginator.num_pages)
+    return records    
+    
 @csrf_exempt   
-def get_report(request, template_name=TEMPLATE_INDEX):
+def get_report(request, page=None, template_name=TEMPLATE_INDEX):
     """
     Creates the report from selected table columns and returns the report
+    also paginate the report records
     """
+    logger.debug("Requested page: " + str(page))
     form = QbeForm(request.POST or None)
     DesignFieldFormset = formset_factory(DesignFieldForm)
     formset = DesignFieldFormset(request.POST or None)
@@ -74,11 +91,11 @@ def get_report(request, template_name=TEMPLATE_INDEX):
             report_data = get_report_data(formset)            
             report_for = form.cleaned_data['report_for']    
             report = axn.get_report_from_data(report_for, report_data)  
-            header = axn.get_header(report_data)
+            records = paginate_report(report['results'], page)
             ctx = {"form": form, 
                    "query": report['query'], 
-                   "header": header,
-                   "report": report['results']}
+                   "header": report['header'],
+                   "report": records}
         except errs.QBEError as err:
             logger.exception("An error occurred: " + err.value)
             ctx = {"qbeerrors": err.value}    
@@ -127,12 +144,11 @@ def export_csv(request):
             if report_data:
                 report_for = form.cleaned_data['report_for']    
                 report = axn.get_report_from_data(report_for, report_data) 
-                header = axn.get_header(report_data)
         except:
             logger.exception("An error occurred")
     if report:        
         writer = csv.writer(response)
-        writer.writerow(header)
+        writer.writerow(report['header'])
         for row in report['results']:
             writer.writerow(row)
     return response

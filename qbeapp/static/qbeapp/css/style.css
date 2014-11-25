@@ -145,6 +145,25 @@ maindesign {
     border-radius: 30px;
     margin-right: 5px;
     color: maroon;
+    background-color: lightsteelblue;
+}
+
+.pagination {
+    margin: 4px 0px 4px 0px;
+    text-align: center;
+}
+
+.pg-current {
+    color: grey;
+}
+
+.pg-btn {
+    width: 80px;
+    height: 20px;
+    border-radius: 20px;
+    margin-right: 5px;
+    background-color: lightblue;
+    color: darkcyan;
 }
 
 .sheet {
@@ -168,4 +187,8 @@ maindesign {
 
 .tablename {
     color: #99CCFF;
+}
+
+.separater {
+    height: 10px;
 }

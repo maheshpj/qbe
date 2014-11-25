@@ -25,5 +25,17 @@
 {% endblock design %}
 
 {% block report %}
-    {% include "qbeapp/report.html" %}
+    <div id="main-report">
+        <div id="reporttbl">
+            {% if report %}
+                {% include "qbeapp/pagination.html" %} 
+            {% endif %}
+
+            {% include "qbeapp/report.html" %}              
+
+            {% if report %} 
+                {% include "qbeapp/pagination.html" %} 
+            {% endif %}
+        </div>
+    </div> 
 {% endblock report %}
