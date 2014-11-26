@@ -1,5 +1,6 @@
 from django import template
 import sqlalchemy
+import re
 
 register = template.Library()
 
@@ -25,3 +26,16 @@ def convert_datatype(saType):
     """
     return type
 
+@register.filter(name='simplify_name')
+def simplify_name(name):
+    if not name:
+        return name
+    else:        
+       words = spl_char_split(name)
+    return ' '.join(words)
+
+def spl_char_split(name):
+    return re.split(r"[_-.]*", name)
+
+def upper_find(name):
+    return re.findall('[A-Z][^A-Z]*', name) or [name]
