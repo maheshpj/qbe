@@ -1,12 +1,17 @@
 <maindesign>
     <div id="reportfor" name="reportfor">
+        <div class="reportFor">
         {{ form.report_for }}  
+        </div>
         <div id="reportfor_err" name="reportfor_err" style="display: inline-block"
             class="errorlist">
             {{ qbeerrors }}
         </div> 
+        <div class="toggleSubdesign">
+            <a id="toggleDesign" href="javascript:void(0)">hide</a>     
+        </div>
     </div>
-    <subdesign>
+    <div id="subdesign">
         <div class="sheet" id="sheet">
             {{ design_fields.management_form }}
             {% for design_field_form in design_fields.forms %}  
@@ -45,22 +50,26 @@
                     </tr>
                     <tr>
                         <td>
-                            {{ design_field_form.operator }}
-                            {{ design_field_form.criteria }}
-                            {{ design_field_form.errors }} 
+                            <p>
+                                {{ design_field_form.operator }}
+                                {{ design_field_form.criteria }}
+                                {{ design_field_form.errors }} 
+                            </p>
                         </td>
                     </tr>
                     <tr>
                         <td style="border-bottom: 0px">
-                            {{ design_field_form.oroperator }}
-                            {{ design_field_form.orcriteria }}
-                            {{ design_field_form.errors }} 
+                            <p>
+                                {{ design_field_form.oroperator }}
+                                {{ design_field_form.orcriteria }}
+                                {{ design_field_form.errors }} 
+                            </p>
                         </td>
                     </tr>
                 </table>
             </div>
             {% endfor %}    
         </div>  
-    </subdesign>  
+    </div>  
         
 <maindesign>

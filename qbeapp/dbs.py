@@ -65,22 +65,37 @@ def get_table_names(schema=None, order_by=None):
     
 def get_column_names(table_name, schema=None):
     return insp.get_columns(table_name, schema)
+
+def get_primary_key_columns(table_name, schema=None):
+    return insp.get_primary_keys(table_name, schema)
+
+def get_foreign_key_columns(table_name, schema=None):
+    return insp.get_foreign_keys(table_name, schema)
         
 def get_table_clms(table_name, schema=None):
     """
     Returns the tuple of tablename and its columns
+    after rmoving pk and fk columns
     """
-    return (table_name, get_column_names(table_name, schema))
+    pks = get_primary_key_columns(table_name, schema)
+    fkcs = get_foreign_key_columns(table_name, schema)
+    fks = [clm['referred_columns'] for clm in fkcs]
+    pks_fks = pks + [clm for sublist in fks for clm in sublist]
+    all_clms = get_column_names(table_name, schema)
+    except_pks_fks = [clm for clm in all_clms if clm['name'] not in pks_fks]
+    print except_pks_fks
+    return (table_name, except_pks_fks)
     
 def get_tables(schema=None, order_by=None):
     """
     Fetches the database metadata for tablename and its columns 
+    if table does not have columns other than pk and fk do not include it
     returns the dictionary having tablename as key and its columns as value
     """
     global table_dict
     if not table_dict:
-        table_dict = dict(map(get_table_clms, 
-                              get_table_names(schema, order_by)))    
+        table_clms = map(get_table_clms, get_table_names(schema, order_by))        
+        table_dict = dict([x for x in table_clms if x[1]])
     return table_dict
     
 def get_table_clm_tuple():

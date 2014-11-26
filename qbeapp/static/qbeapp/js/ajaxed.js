@@ -71,16 +71,31 @@ $(document).ready(function () {
     $("#exportBtn").click(function (event) {
         $.post("/export/", $(qbeFormId).serialize())
         .done(function (data) {
-            window.URL = window.webkitURL || window.URL;
-            var contentType = 'text/csv';            
-            var csvFile = new Blob([data], {type: contentType});            
-            var a = document.createElement('a');
-            ts = event.timeStamp
-            a.download = 'qbe-export-' + ts + '.csv';
-            a.href = window.URL.createObjectURL(csvFile);
-            a.dataset.downloadurl = [contentType, a.download, a.href].join(':');
-            a.click();
+            try {
+                var errors = $(data).find("#reportfor_err");
+                $("#reportfor_err").empty().append(errors);
+            } catch (err) {
+                $("#reportfor_err").empty();
+                window.URL = window.webkitURL || window.URL;
+                var contentType = 'text/csv';
+                var csvFile = new Blob([data], { type: contentType });
+                var a = document.createElement('a');
+                ts = event.timeStamp
+                a.download = 'qbe-export-' + ts + '.csv';
+                a.href = window.URL.createObjectURL(csvFile);
+                a.dataset.downloadurl = [contentType, a.download, a.href].join(':');
+                a.click();
+            }
         })
         .fail(function (xhr, errmsg, err) {failure(xhr, errmsg, err)});
+    });
+
+    $("#toggleDesign").click(function() {
+        $("#subdesign").toggle();
+        if ($("#toggleDesign").text() == 'hide') {
+            $("#toggleDesign").text('show report fields');
+        } else {
+            $("#toggleDesign").text('hide');
+        }
     });
 })
