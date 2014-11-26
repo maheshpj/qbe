@@ -89,4 +89,13 @@ $(document).ready(function () {
         })
         .fail(function (xhr, errmsg, err) {failure(xhr, errmsg, err)});
     });
+
+    $("#toggleDesign").click(function() {
+        $("#subdesign").toggle();
+        if ($("#toggleDesign").text() == 'hide') {
+            $("#toggleDesign").text('show report fields');
+        } else {
+            $("#toggleDesign").text('hide');
+        }
+    });
 })

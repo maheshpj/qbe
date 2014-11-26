@@ -1,12 +1,17 @@
 <maindesign>
     <div id="reportfor" name="reportfor">
+        <div class="reportFor">
         {{ form.report_for }}  
+        </div>
         <div id="reportfor_err" name="reportfor_err" style="display: inline-block"
             class="errorlist">
             {{ qbeerrors }}
         </div> 
+        <div class="toggleSubdesign">
+            <a id="toggleDesign" href="javascript:void(0)">hide</a>     
+        </div>
     </div>
-    <subdesign>
+    <div id="subdesign">
         <div class="sheet" id="sheet">
             {{ design_fields.management_form }}
             {% for design_field_form in design_fields.forms %}  
@@ -61,6 +66,6 @@
             </div>
             {% endfor %}    
         </div>  
-    </subdesign>  
+    </div>  
         
 <maindesign>

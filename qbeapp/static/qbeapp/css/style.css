@@ -44,6 +44,7 @@ ul.errorlist {
     font-size: 12px;
     margin: 0 0 3px;
     padding: 2px 4px 0px 6px;
+    width: 100%;
 }
 
 body {
@@ -123,12 +124,12 @@ maindesign {
         float: left;
     }
 
-    maindesign subdesign, #report_div {
+    maindesign #subdesign, #report_div {
         border: 1px solid grey;
         border-radius: 12px;
     }
 
-    maindesign #reportfor, maindesign subdesign {
+    maindesign #reportfor, maindesign #subdesign {
         clear: both;
         display: flex;
         padding: 0px 0px 4px 0px;
@@ -191,4 +192,14 @@ maindesign {
 
 .separater {
     height: 10px;
+}
+
+.toggleSubdesign {
+    width: 99%;
+    text-align: end;
+    padding: 5px;
+}
+
+.reportFor {
+    width: 50%;
 }
