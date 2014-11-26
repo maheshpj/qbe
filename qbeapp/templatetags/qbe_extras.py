@@ -35,7 +35,7 @@ def simplify_name(name):
     return ' '.join(words)
 
 def spl_char_split(name):
-    return re.split(r"[_-.]*", name)
+    return re.split(r"[\._-]*", name)
 
 def upper_find(name):
     return re.findall('[A-Z][^A-Z]*', name) or [name]
