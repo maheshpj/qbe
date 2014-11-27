@@ -20,6 +20,9 @@ Libraries used
 	- Sqlalchemy [http://www.sqlalchemy.org/]
 	- NetworkX   [https://networkx.github.io/] 	
 	
+	You can use, 
+	- pip install -r requirements.txt
+	
 How to test
 -----------
 
