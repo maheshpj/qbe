@@ -91,7 +91,7 @@ $(document).ready(function () {
     });
 
     $("#toggleDesign").click(function() {
-        $("#subdesign").toggle();
+        $("#subdesign").toggle('blind', 500);
         if ($("#toggleDesign").text() == 'hide') {
             $("#toggleDesign").text('show report fields');
         } else {

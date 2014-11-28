@@ -170,7 +170,7 @@ maindesign {
 
 .sheet {
     float: left;
-    width: 90%;
+    width: 100%;
     overflow: auto;
 }
 
@@ -199,6 +199,7 @@ maindesign {
     width:260px;
     background-color: honeydew; 
     border-radius: 12px;
+    display: inline-block;
 }
 
 .normalDesign {
