@@ -1,7 +1,8 @@
 <ul>
+    {% load qbe_extras %}                          
     {% for key, value in tables.items %}
         <li>
-            <p onclick="toggle('{{ key }}')">{{ key }} </p>
+            <p onclick="toggle('{{ key }}')">{{ key|simplify_name|capfirst }} </p>
             <ul style="display: none" id={{ key }} name={{ key }}>
                 {% for clm in value %}
                     <li>
@@ -9,8 +10,8 @@
                             <p>
                                 <input type="checkbox" 
                                     onclick="addElement(this, '{{ key }}', '{{ clm.name }}')">  
-                                {% load qbe_extras %}                          
-                                {{ clm.name }} <label style="color: #c1b8b8">({{ clm.type|class_name|lower|capfirst }})</label>
+                                {{ clm.name|simplify_name }} 
+                                <label style="color: #c1b8b8">({{ clm.type|class_name|lower|capfirst }})</label>
                             </p>           
                         {% endspaceless %}
                     </li>
