@@ -19,7 +19,7 @@ def report_choices():
     Creates choices to display in Report for drop down 
     and return list of choices
     """
-    return [('', 'Select report for...')] + map(report_for_mapping, get_table_names())
+    return [('', ' Select report for...')] + map(report_for_mapping, get_table_names())
 
 class BaseDesignFieldForm(forms.Form):
     field = forms.CharField(required=False, widget=forms.HiddenInput())
@@ -29,10 +29,10 @@ class BaseDesignFieldForm(forms.Form):
     operator = forms.ChoiceField(choices=utils.OPERATORS, required=False)
     oroperator = forms.ChoiceField(choices=utils.OPERATORS, required=False)
     criteria = forms.CharField(widget=forms.TextInput(attrs=
-        {'placeholder': 'criteria'}), 
+        {'placeholder': ' criteria'}), 
         max_length=1000, required=False)
     orcriteria = forms.CharField(widget=forms.forms.TextInput(attrs=
-        {'placeholder': 'or'}), 
+        {'placeholder': ' or'}), 
         max_length=1000, required=False)
         
 class DesignFieldForm(BaseDesignFieldForm):
@@ -48,5 +48,5 @@ class QbeForm(BaseDesignFieldForm):
     # Custom design field
     table_name = forms.ChoiceField(choices=report_choices(), required=False)
     column_name = forms.CharField(widget=forms.TextInput(attrs=
-        {'placeholder': ' custom column'}), 
+        {'placeholder': ' custom column', 'size': '32'}), 
         max_length=1000, required=False)

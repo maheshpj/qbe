@@ -196,14 +196,18 @@ maindesign {
 }
 
 .customDesign {
-    width:260px;
+    width:265px;
     background-color: honeydew; 
     border-radius: 12px;
     display: inline-block;
 }
 
+.customClm {
+    width: 248px;
+}
+
 .normalDesign {
-    width: 260px;
+    width: 265px;
     background-color: antiquewhite;
     border-radius: 12px;
 }
