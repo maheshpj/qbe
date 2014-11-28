@@ -6,13 +6,58 @@
             {{ qbeerrors }}
         </div> 
     </div>
-    <subdesign>
+    <subdesign> 
         <div class="sheet" id="sheet">
+            <div id="customDesignField" 
+                style="width:260px;background-color: honeydew; border-radius: 12px;">
+                <table width="100%">
+                    <tr>
+                        <td>
+                            <p class="fieldname">{{ form.column_name }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="tablename">{{ form.table_name }}</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>{{ form.exclude }} Exclude</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>{{ form.sort }} Sort</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>{{ form.total }} Total</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            {{ form.operator }}
+                            {{ form.criteria }}
+                            {{ form.errors }} 
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom: 0px">
+                            {{ form.oroperator }}
+                            {{ form.orcriteria }}
+                            {{ form.errors }} 
+                        </td>
+                    </tr>
+                </table>
+            </div>
+    
             {{ design_fields.management_form }}
             {% for design_field_form in design_fields.forms %}  
                      
             <div id="div-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
-                style="width:260px; display: {{design_field_form.style_display }}">
+                style="width:260px; background-color: antiquewhite;  border-radius: 12px; display: {{design_field_form.style_display }}">
                 <input type="hidden" 
                     id="cnt-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
                     value="{{ forloop.counter0 }}">

@@ -20,14 +20,8 @@ def report_choices():
     and return list of choices
     """
     return [('', 'Select report for...')] + map(report_for_mapping, get_table_names())
-    
-class DesignFieldForm(forms.Form):
-    """
-    Design field form
-    """
-    table_name = ""
-    column_name = ""
-    style_display = "none"
+
+class BaseDesignFieldForm(forms.Form):
     field = forms.CharField(required=False, widget=forms.HiddenInput())
     exclude = forms.BooleanField(required=False, label='Exclude', help_text="exclude")
     sort = forms.BooleanField(required=False, label='Sort', help_text="sort")
@@ -40,6 +34,19 @@ class DesignFieldForm(forms.Form):
     orcriteria = forms.CharField(widget=forms.forms.TextInput(attrs=
         {'placeholder': 'or'}), 
         max_length=1000, required=False)
-                                
-class QbeForm(forms.Form):
+        
+class DesignFieldForm(BaseDesignFieldForm):
+    """
+    Design field form
+    """
+    table_name = ""
+    column_name = ""
+    style_display = "none"
+                                    
+class QbeForm(BaseDesignFieldForm):
     report_for = forms.ChoiceField(choices=report_choices(), required=True)
+    # Custom design field
+    table_name = forms.ChoiceField(choices=report_choices(), required=False)
+    column_name = forms.CharField(widget=forms.TextInput(attrs=
+        {'placeholder': ' custom column'}), 
+        max_length=1000, required=False)
