@@ -112,7 +112,8 @@ dbtable {
 }
 
 table tr td {
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid;
+    border-color: #dcdcdc;
 }
 
 maindesign {
@@ -191,4 +192,16 @@ maindesign {
 
 .separater {
     height: 10px;
+}
+
+.customDesign {
+    width:260px;
+    background-color: honeydew; 
+    border-radius: 12px;
+}
+
+.normalDesign {
+    width:260px; 
+    background-color: antiquewhite;  
+    border-radius: 12px; 
 }
