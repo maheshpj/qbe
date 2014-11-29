@@ -40,6 +40,7 @@ class DesignFieldForm(forms.Form):
     orcriteria = forms.CharField(widget=forms.forms.TextInput(attrs=
         {'placeholder': 'or'}), 
         max_length=1000, required=False)
+    chart = forms.ChoiceField(choices=utils.CHART, required=False)
                                 
 class QbeForm(forms.Form):
     report_for = forms.ChoiceField(choices=report_choices(), required=True)

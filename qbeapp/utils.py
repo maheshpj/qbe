@@ -30,6 +30,7 @@ AGGREGATION = (('', ''), ('avg', 'avg'), ('count', 'count'), ('max', 'max'),
 OPERATORS = (('=', '='), ('>=', '>='), ('<=', '<='), ('>', '>'), ('<', '<'), 
              ('<>', '<>'), ('like', 'like'), ('between', 'between'), 
              ('in', 'in'))
+CHART = (('', 'Axis...'), ('X', 'X'), ('Y', 'Y'))
              
 DATABASE_ENGINES = {
         'django.db.backends.postgresql_psycopg2': 'postgresql+psycopg2',

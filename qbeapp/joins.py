@@ -23,6 +23,7 @@ except ImportError:
     import sys
     print("Matplotlib needed for drawing. Skipping")
     sys.exit(0)
+import numpy as np
 
 logger = logging.getLogger('qbe.log')
 graph = None
@@ -157,13 +158,13 @@ def draw_graph(graph, labels=None,
     # these are different layouts for the network you may try
     # shell seems to work best
     if graph_layout == 'spring':
-        graph_pos=nx.spring_layout(graph)
+        graph_pos = nx.spring_layout(graph)
     elif graph_layout == 'spectral':
-        graph_pos=nx.spectral_layout(graph)
+        graph_pos = nx.spectral_layout(graph)
     elif graph_layout == 'random':
-        graph_pos=nx.random_layout(graph)
+        graph_pos = nx.random_layout(graph)
     else:
-        graph_pos=nx.shell_layout(graph)
+        graph_pos = nx.shell_layout(graph)
 
     # draw graph
     nx.draw_networkx_nodes(graph, graph_pos,node_size=node_size, 
@@ -174,7 +175,7 @@ def draw_graph(graph, labels=None,
                             font_family=text_font)
 
     if labels is None:
-        labels =  range(len(graph.edges()))
+        labels = range(len(graph.edges()))
     # dict([((u,v,),d) for u,v,d in graph.edges(data=True)])
 
     edge_labels = dict(zip(graph.edges(), labels))
