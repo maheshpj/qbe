@@ -71,7 +71,7 @@ def dyna_chart(title, xlabel, ylabel, legend, x_data, y_data):
 
     fig, ax = plt.subplots()
     rects = ax.bar(ind, means, width, color='r', yerr=std)
-    
+    fig.autofmt_xdate()
     # add some text for labels, title and axes ticks
     ax.set_ylabel(ylabel)
     ax.set_xlabel(xlabel)
