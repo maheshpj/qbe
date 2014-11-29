@@ -79,7 +79,7 @@ def dyna_chart(title, xlabel, ylabel, legend, x_data, y_data):
     ax.set_xticks(ind+width)
     ax.set_xticklabels(x_data) 
 
-    ax.legend((rects), legend)
+    ax.legend((rects), legend, loc='best', fancybox=True, framealpha=0.5)
     autolabel(rects, ax)
 
     plt.show()

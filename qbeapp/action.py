@@ -54,6 +54,8 @@ def show_chart(report_for, report_data):
     if not ax_data:
         raise errs.QBEError("No valid data found for plotting chart.")
 
-    chrt.dyna_chart(report_for, x_ax[0], y_ax[0], x_ax, 
-                    ax_data['X'], ax_data['Y'])
+    chrt.dyna_chart(report_for, 
+                    x_ax[0].replace('.', "'s "), 
+                    y_ax[0].replace('.', "'s "), 
+                    x_ax, ax_data['X'], ax_data['Y'])
 
