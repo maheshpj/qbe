@@ -15,7 +15,6 @@ import qbeapp.action as axn
 import logging
 import csv
 import qbeapp.errors as errs
-import qbeapp.charts as chrt
 
 logger = logging.getLogger('qbe.log')
 design_fields = []
@@ -127,7 +126,7 @@ def draw_graph(request):
     return redirect('/')
 
 @csrf_exempt
-def show_report_chart(request):
+def show_report_chart(request, template_name=TEMPLATE_INDEX):
     form = QbeForm(request.POST or None)
     DesignFieldFormset = formset_factory(DesignFieldForm)
     formset = DesignFieldFormset(request.POST or None)
@@ -136,31 +135,14 @@ def show_report_chart(request):
         try:   
             report_data = get_report_data(formset)            
             report_for = form.cleaned_data['report_for']  
-            if report_data and report_for:                  
-                report = axn.get_report_from_data(report_for, report_data)  
-                records = report['results']
-                header = report['header']
-
-                axis = chrt.get_axis_from_report_data(report_data)
-                if not axis:
-                    raise errs.QBEError("No valid data found for plotting chart.")                  
-                x_ax = axis['X']
-                y_ax = axis['Y']
-
-                ax_data = chrt.get_chart_data(header, records, x_ax[0], y_ax[0])
-                if not ax_data:
-                    raise errs.QBEError("No valid data found for plotting chart.")
-
-                chrt.dyna_chart(report_for, x_ax[0], y_ax[0], x_ax, 
-                                ax_data['X'], ax_data['Y'])
+            if report_data and report_for:                
+                axn.show_chart(report_for, report_data)
             else:
                 raise errs.QBEError("No valid data found for report chart.")
         except errs.QBEError as err:
             logger.exception("An error occurred: " + err.value)
             ctx = {"qbeerrors": err.value}                
             return render_to_response(template_name, ctx) 
-        except:
-            raise;
     else:
         ctx = {"form": form, "qbeerrors": form.errors}
         logger.error('Invalid form: %s ', form.errors)

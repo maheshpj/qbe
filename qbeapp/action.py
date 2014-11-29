@@ -9,6 +9,8 @@ import qbeapp.dbs as db
 import qbeapp.query as qry
 import qbeapp.joins as grph
 import logging
+import qbeapp.charts as chrt
+import qbeapp.errors as errs
 
 logger = logging.getLogger('qbe.log')
 
@@ -36,4 +38,22 @@ def init_qbe():
 
 def draw_graph():
     grph.draw_graph(grph.get_db_graph())
+
+def show_chart(report_for, report_data):    
+    axis = chrt.get_axis_from_report_data(report_data)
+    if not axis:
+        raise errs.QBEError("Please provide X and Y axis to plot chart.")                  
+    x_ax = axis['X']
+    y_ax = axis['Y']
+    
+    report = get_report_from_data(report_for, report_data)  
+    records = report['results']
+    header = report['header']
+    
+    ax_data = chrt.get_chart_data(header, records, x_ax[0], y_ax[0])
+    if not ax_data:
+        raise errs.QBEError("No valid data found for plotting chart.")
+
+    chrt.dyna_chart(report_for, x_ax[0], y_ax[0], x_ax, 
+                    ax_data['X'], ax_data['Y'])
 
