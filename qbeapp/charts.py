@@ -12,6 +12,7 @@ except ImportError:
     print("Matplotlib needed for drawing. Skipping")
     sys.exit(0)
 import numpy as np
+import matplotlib.mlab as mlab
 import qbeapp.errors as errs
 
 def get_axis_from_report_data(report_data):
@@ -81,6 +82,30 @@ def dyna_chart(title, xlabel, ylabel, legend, x_data, y_data):
 
     ax.legend((rects), legend, loc='best', fancybox=True, framealpha=0.5)
     autolabel(rects, ax)
+
+    plt.show()
+
+def histogram(mu,                 # mean of distribution
+              sigma,              # standard deviation of distribution
+              records, 
+              num_bins, 
+              title, 
+              xlabel, 
+              ylabel, 
+              normed=1, 
+              facecolor='green', 
+              alpha=0.5):
+    # the histogram of the data
+    n, bins, patches = plt.hist(list(records), num_bins, normed, facecolor, alpha)
+    # add a 'best fit' line
+    y = mlab.normpdf(bins, mu, sigma)
+    plt.plot(bins, y, 'r--')
+    plt.xlabel(xlabel)
+    plt.ylabel(ylabel)
+    plt.title(title + ': $\mu='+ mu +'$, $\sigma='+ sigma +'$')
+
+    # Tweak spacing to prevent clipping of ylabel
+    plt.subplots_adjust(left=0.15)
 
     plt.show()
 

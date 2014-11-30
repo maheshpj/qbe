@@ -184,3 +184,6 @@ def export_csv(request, template_name=TEMPLATE_INDEX):
         for row in report['results']:
             writer.writerow(row)
     return response
+
+def test_histogram(request):
+    axn.test_histogram()

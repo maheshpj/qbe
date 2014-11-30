@@ -11,6 +11,7 @@ import qbeapp.joins as grph
 import logging
 import qbeapp.charts as chrt
 import qbeapp.errors as errs
+import qbeapp.utils as utils
 
 logger = logging.getLogger('qbe.log')
 
@@ -23,6 +24,7 @@ def get_design_field_forms():
 def get_report_from_data(report_for, report_data):    
     query = qry.generate_sql(report_for, report_data)
     results = db.get_query_results(query)
+    print results
     header = get_header(report_data)
     return {'query': query, 'results': results, 'header': header}
 
@@ -55,7 +57,37 @@ def show_chart(report_for, report_data):
         raise errs.QBEError("No valid data found for plotting chart.")
 
     chrt.dyna_chart(report_for, 
-                    x_ax[0].replace('.', "'s "), 
-                    y_ax[0].replace('.', "'s "), 
+                    x_ax[0].replace(utils.DOT, utils.APO_S), 
+                    y_ax[0].replace(utils.DOT, utils.APO_S), 
                     x_ax, ax_data['X'], ax_data['Y'])
 
+def get_num_bins(size):
+    num_bins = 50 if size > 500 else int(size/10)
+    return num_bins
+
+def get_mu(from_list):
+    mu = int((max(from_list) + min(from_list)) / 2)
+    return mu
+
+def test_histogram():
+    report_data = [{'sort': False, 'orcriteria': u'', 'oroperator': u'=', 
+                    'chart': u'', 'field': u'Products.UnitPrice', 
+                    'criteria': u'', 'operator': u'=', 
+                    'exclude': False, 'total': u''}]
+    show_histogram('Products', report_data)
+
+def show_histogram(report_for, report_data):
+    report = get_report_from_data(report_for, report_data)
+    records = utils.reduceto_list(report['results'])
+    total = len(records)
+    xlabel = report_data[0]['field']
+    xlabel = xlabel.replace(utils.DOT, utils.APO_S)
+    title = "Histogram of " + report_for
+    sigma = 10
+    chrt.histogram(get_mu(records), 
+                   sigma, 
+                   records, 
+                   get_num_bins(total), 
+                   title, 
+                   xlabel, 
+                   'Probability')

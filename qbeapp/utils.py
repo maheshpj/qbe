@@ -8,6 +8,7 @@ Created on Thu Nov 16 2014
 
 import time
 import datetime
+import itertools
 
 SELECT = "SELECT"
 FROM = "FROM"
@@ -23,6 +24,7 @@ JOIN = "JOIN"
 ON = "ON"
 AND = "AND"
 OR = "OR"
+APO_S = "'s "
 
 AGGREGATION = (('', ''), ('avg', 'avg'), ('count', 'count'), ('max', 'max'), 
                ('min', 'min'), ('sum', 'sum'), ('upper', 'upper'), 
@@ -51,3 +53,14 @@ def get_timestamp():
     ts = time.time()
     t_format = '%Y-%m-%d_%H-%M-%S'
     return datetime.datetime.fromtimestamp(ts).strftime(t_format)    
+
+def reduceto_list(from_list):
+    """ 
+    Reduces a list of lists into a single list
+    
+    example:
+    t = [(18,), (19,), (10,)]
+    list(itertools.chain(*t))
+    [18, 19, 10]
+    """
+    return list(itertools.chain(*from_list))
