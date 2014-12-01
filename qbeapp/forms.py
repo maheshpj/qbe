@@ -27,6 +27,7 @@ class DesignFieldForm(forms.Form):
     """
     table_name = ""
     column_name = ""
+    datatype = ""
     style_display = "none"
     field = forms.CharField(required=False, widget=forms.HiddenInput())
     exclude = forms.BooleanField(required=False, label='Exclude', help_text="exclude")

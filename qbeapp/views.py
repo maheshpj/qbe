@@ -54,8 +54,10 @@ def get_design_formset():
 def create_formset_from_tables(formset, design_field_forms):
     count = 0 
     for form in formset:
-        form.table_name = design_field_forms[count][0]
-        form.column_name = design_field_forms[count][1]
+        dsn_field = design_field_forms[count]
+        form.table_name = dsn_field[0]
+        form.column_name = dsn_field[1]['name']
+        form.datatype = dsn_field[1]['type']
         count = count + 1
     return  formset   
                             

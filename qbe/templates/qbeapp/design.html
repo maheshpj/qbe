@@ -1,4 +1,5 @@
 <maindesign>
+    {% load qbe_extras %}     
     <div id="reportfor" name="reportfor">
         <div class="reportFor">
         {{ form.report_for }}  
@@ -21,11 +22,16 @@
                 <input type="hidden" 
                     id="cnt-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
                     value="{{ forloop.counter0 }}">
-                {{ design_field_form.field }}              
+                {{ design_field_form.field }}             
                 <table width="100%">
                     <tr>
                         <td>
-                            <p class="fieldname">{{ design_field_form.column_name }}</p>
+                            <p class="fieldname">
+                                {{ design_field_form.column_name }}
+                                <label class="liteTxt">
+                                    ({{ design_field_form.datatype|class_name|lower|capfirst }})
+                                </label>
+                            </p>
                         </td>
                     </tr>
                     <tr>

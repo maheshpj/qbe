@@ -64,3 +64,10 @@ def reduceto_list(from_list):
     [18, 19, 10]
     """
     return list(itertools.chain(*from_list))
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False

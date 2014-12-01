@@ -105,7 +105,7 @@ def get_table_clm_tuple():
     tables_tuple = []
     for table_name, columns in tables.iteritems():
         for column in columns:
-            tables_tuple.append((table_name, column['name']))
+            tables_tuple.append((table_name, column))
     return tables_tuple
 
 def get_query_results(sqlstr):    
