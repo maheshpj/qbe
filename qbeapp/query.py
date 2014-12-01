@@ -10,8 +10,12 @@ This module will create a query from submitted user data
 from qbeapp.utils import *
 import qbeapp.joins as jns
 import logging
+import re
+import qbeapp.errors as errs
+import qbeapp.utils as util
 
 logger = logging.getLogger('qbe.log')
+rgx = ',[\s]*|,|;[\s]*|;|[\s].*[aA][nN][dD].*\s'
 
 def get_fields_from_report_data(report_data):
     """
@@ -71,17 +75,31 @@ def get_query_orderby(report_data):
     order_by = COMMA.join(sorts)
     return order_by
 
+def get_between(from_str):
+    btwns = re.split(rgx, from_str)
+    if len(btwns) == 2:
+        return (SPACE + AND + SPACE).join([quote_str(x) for x in btwns])
+    else:
+        raise errs.QBEError("Invalid between criteria. Split values with comma or text 'and'")
+
+def get_in(from_str):
+    ins = re.split(rgx, from_str)
+    return parenthesized_str(", ".join([quote_str(x) for x in ins]))
+
 def create_criteria(data, cr):
-    return SPACE.join((data['field'], 
-                       data['operator'], 
-                       quote_str(data[cr])))
+    op = data['operator'] if cr == 'criteria' else data['oroperator']
+    val = quote_str(data[cr])
+    if op == 'between':
+        val = get_between(data[cr])
+    elif op == 'in':
+        val = get_in(data[cr])
+    return SPACE.join((data['field'], op, val))
 
 def get_query_where(report_data):
     """
     Create and returns where clause
     """
-    wheres = []
-    ors = []
+    wheres, ors = [], []
     for data in report_data:
         if data['criteria']:
             wheres.append(create_criteria(data, 'criteria'))
@@ -90,7 +108,7 @@ def get_query_where(report_data):
     and_whr = AND.join(wheres)
     where = and_whr  
     if ors:
-        or_whr = OR.join(ors)    
+        or_whr = (SPACE + OR + SPACE).join(ors)    
         where = SPACE.join((and_whr, OR, or_whr)) 
     return where
 

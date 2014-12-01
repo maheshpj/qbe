@@ -50,3 +50,10 @@ def get_timestamp():
     ts = time.time()
     t_format = '%Y-%m-%d_%H-%M-%S'
     return datetime.datetime.fromtimestamp(ts).strftime(t_format)    
+
+def is_number(s):
+    try:
+        float(s)
+        return True
+    except ValueError:
+        return False
