@@ -69,6 +69,13 @@
                     <tr>
                         <td style="border-bottom: 0px">
                             <p>{{ design_field_form.chart }} Bar Chart</p>
+                            <p>
+                                <a 
+                                    href="javascript:void(0)"
+                                    onclick="hist('{{ design_field_form.table_name }}.{{ design_field_form.column_name }}')">
+                                    Histogram
+                                </a>
+                            </p>
                         </td>
                     </tr>
                 </table>

@@ -14,6 +14,9 @@ except ImportError:
 import numpy as np
 import matplotlib.mlab as mlab
 import qbeapp.errors as errs
+import logging
+
+logger = logging.getLogger('qbe.log')
 
 def get_axis_from_report_data(report_data):
     x_ax = []
@@ -41,7 +44,7 @@ def get_chart_data(header, results, x, y):
             elif clm == y:            
                 y_idx = header.index(clm)
                 y_data = [int(y[y_idx]) for y in results]
-    except ValueError as ve:
+    except ValueError:
         raise errs.QBEError("Y axis data should have numeric values.")
     except:
         raise
@@ -94,18 +97,22 @@ def histogram(mu,                 # mean of distribution
               ylabel, 
               normed=1, 
               facecolor='green', 
-              alpha=0.5):
+              alpha=0.75,
+              grid=True):
     # the histogram of the data
-    n, bins, patches = plt.hist(list(records), num_bins, normed, facecolor, alpha)
+    n, bins, patches = plt.hist(records, 50, normed=normed, 
+                                facecolor=facecolor, alpha=alpha)
     # add a 'best fit' line
     y = mlab.normpdf(bins, mu, sigma)
     plt.plot(bins, y, 'r--')
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
-    plt.title(title + ': $\mu='+ mu +'$, $\sigma='+ sigma +'$')
+    plt.title(title + ': $\mu='+ str(mu) +'$, $\sigma='+ str(sigma) +'$')
 
     # Tweak spacing to prevent clipping of ylabel
     plt.subplots_adjust(left=0.15)
+    plt.xlim([mu-150, mu+150])
+    plt.grid(grid)
 
     plt.show()
 

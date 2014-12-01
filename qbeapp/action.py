@@ -12,6 +12,7 @@ import logging
 import qbeapp.charts as chrt
 import qbeapp.errors as errs
 import qbeapp.utils as utils
+import numpy as np
 
 logger = logging.getLogger('qbe.log')
 
@@ -24,7 +25,6 @@ def get_design_field_forms():
 def get_report_from_data(report_for, report_data):    
     query = qry.generate_sql(report_for, report_data)
     results = db.get_query_results(query)
-    print results
     header = get_header(report_data)
     return {'query': query, 'results': results, 'header': header}
 
@@ -65,9 +65,8 @@ def get_num_bins(size):
     num_bins = 50 if size > 500 else int(size/10)
     return num_bins
 
-def get_mu(from_list):
-    mu = int((max(from_list) + min(from_list)) / 2)
-    return mu
+def get_mean(from_list):
+    return np.mean(from_list)
 
 def test_histogram():
     report_data = [{'sort': False, 'orcriteria': u'', 'oroperator': u'=', 
@@ -79,15 +78,21 @@ def test_histogram():
 def show_histogram(report_for, report_data):
     report = get_report_from_data(report_for, report_data)
     records = utils.reduceto_list(report['results'])
-    total = len(records)
-    xlabel = report_data[0]['field']
-    xlabel = xlabel.replace(utils.DOT, utils.APO_S)
-    title = "Histogram of " + report_for
-    sigma = 10
-    chrt.histogram(get_mu(records), 
-                   sigma, 
-                   records, 
-                   get_num_bins(total), 
-                   title, 
-                   xlabel, 
-                   'Probability')
+    if records:
+        total = len(records)
+        xlabel = report_data[0]['field']
+        xlabel = xlabel.replace(utils.DOT, utils.APO_S)
+        title = "Histogram of " + report_for
+        sigma = 10
+        mean = get_mean(records)
+        num_bins = get_num_bins(total)
+        
+        logger.debug("Histogram value: ")
+        logger.debug(" mu : " + str(mean))
+        logger.debug(" sigma : " + str(sigma))
+        logger.debug(" num_bins : " + str(num_bins))
+        
+        chrt.histogram(mean, sigma, records, num_bins, 
+                       title, xlabel, 'Probability')
+    else:
+        raise errs.QBEError("No data found.")                   

@@ -104,4 +104,11 @@ $(document).ready(function () {
             $("#toggleDesign").text('hide');
         }
     });
-})
+
+});
+
+
+function hist(id) {
+    $.post("/report/hist/" + id, $("#qbeform").serialize())
+    .done(function (data) {})
+}

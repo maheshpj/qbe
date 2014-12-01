@@ -148,6 +148,37 @@ def show_report_chart(request, template_name=TEMPLATE_INDEX):
         logger.error('Invalid form: %s ', form.errors)
         return render_to_response(template_name, ctx)
     return redirect('/')  
+
+def filter_report_for_hist(report_data, hist_id):
+    for data in report_data:
+        if data["field"] == hist_id:
+            return [data]
+    return None        
+    
+@csrf_exempt
+def show_histogram(request, hist_id, template_name=TEMPLATE_INDEX):
+    form = QbeForm(request.POST or None)
+    DesignFieldFormset = formset_factory(DesignFieldForm)
+    formset = DesignFieldFormset(request.POST or None)
+    ctx = {}
+    if form.is_valid() and formset.is_valid():
+        try:   
+            report_data = get_report_data(formset)        
+            hist_data = filter_report_for_hist(report_data, hist_id)
+            report_for = form.cleaned_data['report_for']  
+            if hist_data and report_for:                
+                axn.show_histogram(report_for, hist_data)
+            else:
+                raise errs.QBEError("No valid data found for histogram.")
+        except errs.QBEError as err:
+            logger.exception("An error occurred: " + err.value)
+            ctx = {"qbeerrors": err.value}                
+            return render_to_response(template_name, ctx) 
+    else:
+        ctx = {"form": form, "qbeerrors": form.errors}
+        logger.error('Invalid form: %s ', form.errors)
+        return render_to_response(template_name, ctx)
+    return redirect('/')  
     
 @csrf_exempt
 def export_csv(request, template_name=TEMPLATE_INDEX):
@@ -184,6 +215,3 @@ def export_csv(request, template_name=TEMPLATE_INDEX):
         for row in report['results']:
             writer.writerow(row)
     return response
-
-def test_histogram(request):
-    axn.test_histogram()
