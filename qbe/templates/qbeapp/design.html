@@ -91,7 +91,12 @@
                     <table width="100%">
                         <tr>
                             <td>
-                                <p class="fieldname">{{ design_field_form.column_name }}</p>
+                                <p class="fieldname">
+                                    {{ design_field_form.column_name }}
+                                    <label class="liteTxt">
+                                        ({{ design_field_form.datatype|class_name|lower|capfirst }})
+                                    </label>
+                                </p>
                             </td>
                         </tr>
                         <tr>
