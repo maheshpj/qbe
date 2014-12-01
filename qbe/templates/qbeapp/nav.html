@@ -11,7 +11,7 @@
                                 <input type="checkbox" 
                                     onclick="addElement(this, '{{ key }}', '{{ clm.name }}')">  
                                 {{ clm.name|simplify_name }} 
-                                <label style="color: #c1b8b8">({{ clm.type|class_name|lower|capfirst }})</label>
+                                <label class="liteTxt">({{ clm.type|class_name|lower|capfirst }})</label>
                             </p>           
                         {% endspaceless %}
                     </li>

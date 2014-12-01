@@ -1,4 +1,5 @@
 <maindesign>
+    {% load qbe_extras %}     
     <div id="reportfor" name="reportfor">
         <div class="reportFor">
         {{ form.report_for }}  
@@ -14,7 +15,8 @@
 
     <div id="subdesign">
         <div class="sheet" id="sheet">
-            <div id="customDesignField" class="customDesign">
+           
+             <div id="customDesignField" class="customDesign">
                 <table width="100%">
                     <tr>
                         <td>
@@ -51,11 +53,23 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="border-bottom: 0px">
+                        <td>
                             <p>
                                 {{ form.oroperator }}
                                 {{ form.orcriteria }}
                                 {{ form.errors }} 
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border-bottom: 0px">
+                            <p>{{ form.chart }} Bar Chart</p>
+                            <p>
+                                <a 
+                                    href="javascript:void(0)"
+                                    onclick="hist('{{ design_field_form.table_name }}.{{ design_field_form.column_name }}')">
+                                    Histogram
+                                </a>
                             </p>
                         </td>
                     </tr>
@@ -118,8 +132,21 @@
                                 </p>
                             </td>
                         </tr>
+                        <tr>
+                            <td style="border-bottom: 0px">
+                                <p>{{ design_field_form.chart }} Bar Chart</p>
+                                <p>
+                                    <a 
+                                        href="javascript:void(0)"
+                                        onclick="hist('{{ design_field_form.table_name }}.{{ design_field_form.column_name }}')">
+                                        Histogram
+                                    </a>
+                                </p>
+                            </td>
+                        </tr>
                     </table>
                 </div>
+            
             {% endfor %}    
         </div>  
     </div>  

@@ -83,7 +83,6 @@ def get_table_clms(table_name, schema=None):
     pks_fks = pks + [clm for sublist in fks for clm in sublist]
     all_clms = get_column_names(table_name, schema)
     except_pks_fks = [clm for clm in all_clms if clm['name'] not in pks_fks]
-    print except_pks_fks
     return (table_name, except_pks_fks)
     
 def get_tables(schema=None, order_by=None):
@@ -106,7 +105,7 @@ def get_table_clm_tuple():
     tables_tuple = []
     for table_name, columns in tables.iteritems():
         for column in columns:
-            tables_tuple.append((table_name, column['name']))
+            tables_tuple.append((table_name, column))
     return tables_tuple
 
 def get_query_results(sqlstr):    

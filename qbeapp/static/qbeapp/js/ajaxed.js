@@ -67,6 +67,12 @@ $(document).ready(function () {
         .done(function (data) {})
         .fail(function (xhr, errmsg, err) {failure(xhr, errmsg, err)});
     });
+    
+    $("#showChartBtn").click(function (event) {
+        $.post("/report/chart/", $(qbeFormId).serialize())
+        .done(function (data) {})
+        .fail(function (xhr, errmsg, err) { failure(xhr, errmsg, err) });
+    });
 
     $("#exportBtn").click(function (event) {
         $.post("/export/", $(qbeFormId).serialize())
@@ -98,4 +104,11 @@ $(document).ready(function () {
             $("#toggleDesign").text('hide');
         }
     });
-})
+
+});
+
+
+function hist(id) {
+    $.post("/report/hist/" + id, $("#qbeform").serialize())
+    .done(function (data) {})
+}

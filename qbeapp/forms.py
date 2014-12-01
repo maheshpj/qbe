@@ -34,6 +34,7 @@ class BaseDesignFieldForm(forms.Form):
     orcriteria = forms.CharField(widget=forms.forms.TextInput(attrs=
         {'placeholder': ' or'}), 
         max_length=1000, required=False)
+    chart = forms.ChoiceField(choices=utils.CHART, required=False)
         
 class DesignFieldForm(BaseDesignFieldForm):
     """
@@ -41,6 +42,7 @@ class DesignFieldForm(BaseDesignFieldForm):
     """
     table_name = ""
     column_name = ""
+    datatype = ""
     style_display = "none"
                                     
 class QbeForm(BaseDesignFieldForm):

@@ -16,7 +16,6 @@ import logging
 import csv
 import qbeapp.errors as errs
 
-
 logger = logging.getLogger('qbe.log')
 design_fields = []
 TEMPLATE_INDEX = "qbeapp/index.html"
@@ -55,8 +54,10 @@ def get_design_formset():
 def create_formset_from_tables(formset, design_field_forms):
     count = 0 
     for form in formset:
-        form.table_name = design_field_forms[count][0]
-        form.column_name = design_field_forms[count][1]
+        dsn_field = design_field_forms[count]
+        form.table_name = dsn_field[0]
+        form.column_name = dsn_field[1]['name']
+        form.datatype = dsn_field[1]['type']
         count = count + 1
     return  formset   
                             
@@ -125,6 +126,61 @@ def is_valid_design_field(design_field):
 def draw_graph(request):
     axn.draw_graph()
     return redirect('/')
+
+@csrf_exempt
+def show_report_chart(request, template_name=TEMPLATE_INDEX):
+    form = QbeForm(request.POST or None)
+    DesignFieldFormset = formset_factory(DesignFieldForm)
+    formset = DesignFieldFormset(request.POST or None)
+    ctx = {}
+    if form.is_valid() and formset.is_valid():
+        try:   
+            report_data = get_report_data(formset)            
+            report_for = form.cleaned_data['report_for']  
+            if report_data and report_for:                
+                axn.show_chart(report_for, report_data)
+            else:
+                raise errs.QBEError("No valid data found for report chart.")
+        except errs.QBEError as err:
+            logger.exception("An error occurred: " + err.value)
+            ctx = {"qbeerrors": err.value}                
+            return render_to_response(template_name, ctx) 
+    else:
+        ctx = {"form": form, "qbeerrors": form.errors}
+        logger.error('Invalid form: %s ', form.errors)
+        return render_to_response(template_name, ctx)
+    return redirect('/')  
+
+def filter_report_for_hist(report_data, hist_id):
+    for data in report_data:
+        if data["field"] == hist_id:
+            return [data]
+    return None        
+    
+@csrf_exempt
+def show_histogram(request, hist_id, template_name=TEMPLATE_INDEX):
+    form = QbeForm(request.POST or None)
+    DesignFieldFormset = formset_factory(DesignFieldForm)
+    formset = DesignFieldFormset(request.POST or None)
+    ctx = {}
+    if form.is_valid() and formset.is_valid():
+        try:   
+            report_data = get_report_data(formset)        
+            hist_data = filter_report_for_hist(report_data, hist_id)
+            report_for = form.cleaned_data['report_for']  
+            if hist_data and report_for:                
+                axn.show_histogram(report_for, hist_data)
+            else:
+                raise errs.QBEError("No valid data found for histogram.")
+        except errs.QBEError as err:
+            logger.exception("An error occurred: " + err.value)
+            ctx = {"qbeerrors": err.value}                
+            return render_to_response(template_name, ctx) 
+    else:
+        ctx = {"form": form, "qbeerrors": form.errors}
+        logger.error('Invalid form: %s ', form.errors)
+        return render_to_response(template_name, ctx)
+    return redirect('/')  
     
 @csrf_exempt
 def export_csv(request, template_name=TEMPLATE_INDEX):
