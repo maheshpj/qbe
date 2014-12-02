@@ -5,6 +5,14 @@ Created on Thu Nov 29 2014
 @author: Mahesh.Jadhav
 
 """
+import logging
+
+try:
+    import networkx as nx
+except ImportError:
+    import sys
+    print("NetworkX needed for graphs. Skipping")
+    sys.exit(0)
 try:
     import matplotlib.pyplot as plt
 except ImportError:
@@ -13,10 +21,71 @@ except ImportError:
     sys.exit(0)
 import numpy as np
 import matplotlib.mlab as mlab
+
 import qbeapp.errors as errs
-import logging
+
 
 logger = logging.getLogger('qbe.log')
+
+def draw_graph(graph, labels=None, 
+               graph_layout='shell',
+               node_size=1600, 
+               node_color='blue', 
+               node_alpha=0.4,
+               node_text_size=10,
+               edge_color='grey', 
+               edge_alpha=0.3, 
+               edge_tickness=1,
+               edge_text_pos=0.3,
+               text_font='sans-serif'):
+    # these are different layouts for the network you may try
+    # shell seems to work best
+    if graph_layout == 'spring':
+        graph_pos = nx.spring_layout(graph)
+    elif graph_layout == 'spectral':
+        graph_pos = nx.spectral_layout(graph)
+    elif graph_layout == 'random':
+        graph_pos = nx.random_layout(graph)
+    else:
+        graph_pos = nx.shell_layout(graph)
+
+    # draw graph
+    nx.draw_networkx_nodes(graph, graph_pos,node_size=node_size, 
+                           alpha=node_alpha, node_color=node_color)
+    nx.draw_networkx_edges(graph, graph_pos, width=edge_tickness,
+                           alpha=edge_alpha, edge_color=edge_color)
+    nx.draw_networkx_labels(graph, graph_pos, font_size=node_text_size,
+                            font_family=text_font)
+
+    if labels is None:
+        labels = range(len(graph.edges()))
+    # dict([((u,v,),d) for u,v,d in graph.edges(data=True)])
+
+    edge_labels = dict(zip(graph.edges(), labels))
+
+    nx.draw_networkx_edge_labels(graph, graph_pos, edge_labels=edge_labels, 
+                                 label_pos=edge_text_pos)
+
+    font = {'fontname'   : 'Helvetica',
+            'color'      : 'm',
+            'fontweight' : 'bold',
+            'fontsize'   : 14
+            }
+    plt.title("Database Tables Graph", font)
+
+    font = {'fontname'   : 'Helvetica',
+            'color'      : 'r',
+            'fontweight' : 'bold',
+            'fontsize'   : 14
+            }
+
+    plt.text(0.5, 0.97, "edge = foreign key relationship",
+             horizontalalignment='center',
+             transform=plt.gca().transAxes)
+    plt.axis('off')
+    plt.savefig("db_tbls_graph.png")
+    # show graph
+    plt.show()
 
 def get_axis_from_report_data(report_data):
     x_ax = []

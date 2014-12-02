@@ -39,7 +39,7 @@ def init_qbe():
     grph.create_primary_key_dict()      
 
 def draw_graph():
-    grph.draw_graph(grph.get_db_graph())
+    chrt.draw_graph(grph.get_db_graph())
 
 def show_chart(report_for, report_data):    
     axis = chrt.get_axis_from_report_data(report_data)
