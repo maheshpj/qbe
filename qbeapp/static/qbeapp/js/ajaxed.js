@@ -105,8 +105,15 @@ $(document).ready(function () {
         }
     });
 
-});
+    $("#clearAllClms").click(function() {
+        var checkBoxes = $("input[name=cbQbeClm]");
+        checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+        checkBoxes.each(function(){
+            this.click();
+        })
+    });
 
+});
 
 function hist(id) {
     $.post("/report/hist/" + id, $("#qbeform").serialize())

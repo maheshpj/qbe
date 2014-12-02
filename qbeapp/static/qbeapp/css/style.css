@@ -78,8 +78,13 @@ content {
 nav {
     float: left;
     height: 640px;
-    overflow: auto;
     width: 25%;
+}
+
+.sidebar {
+    margin-top: 5px;
+    height: 620px;    
+    overflow: auto;
 }
 
 action {
@@ -231,4 +236,31 @@ maindesign {
 
 .liteTxt {
     color: #c1b8b8;
+}
+
+.noUnderline {
+    text-decoration: none;
+}
+
+.clearAll {
+    margin-left: 20px;
+    text-decoration: none;
+}
+
+.showDBGraph {
+    display: inline-block;
+    float: right;
+}
+
+.ibDiv {
+    display: inline-block;
+}
+
+.simpleBtn {
+    width: 160px;
+    height: 20px;
+    border-radius: 20px;
+    margin-right: 5px;
+    color: #008b8b;
+    background-color: #B0C4DE;
 }
