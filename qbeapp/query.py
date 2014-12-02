@@ -80,7 +80,8 @@ def get_between(from_str):
     if len(btwns) == 2:
         return (SPACE + AND + SPACE).join([quote_str(x) for x in btwns])
     else:
-        raise errs.QBEError("Invalid between criteria. Split values with comma or text 'and'")
+        raise errs.QBEError("Invalid between criteria. Split values with " +
+                            "comma or text 'and'")
 
 def get_in(from_str):
     ins = re.split(rgx, from_str)

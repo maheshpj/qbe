@@ -4,7 +4,8 @@ Created on Sun Nov 09 15:30:08 2014
 
 @author: Mahesh.Jadhav
 
-This module uses networkx graphs to create database tables graph using foreign key as edge
+This module uses networkx graphs to create database tables graph 
+using foreign key as edge
 """
 
 from qbeapp.utils import *
@@ -112,7 +113,8 @@ def get_db_pk_dict():
 
 def create_primary_key_dict():    
     """
-    Creates table and its primary key relation dictionary like {'tablename': 'pk_column'}
+    Creates table and its primary key relation dictionary like 
+        {'tablename': 'pk_column'}
     returns dictionary
     """
     logger.info("Creating primary key dict...")
@@ -130,7 +132,8 @@ def create_primary_key_dict():
     
 def create_db_graph():
     """
-    Creates database graph using edge like {'pk_table', 'fk_table', fk={'fk_table': 'fk_column'}}
+    Creates database graph using edge like 
+        {'pk_table', 'fk_table', fk={'fk_table': 'fk_column'}}
     returns networkx graph object
     """
     logger.info("Creating database graph...")
