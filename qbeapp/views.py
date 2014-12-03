@@ -5,7 +5,7 @@ Created on Thu Nov 06 13:39:44 2014
 @author: Mahesh.Jadhav
 """
 from django.shortcuts import render_to_response, redirect
-from django.views.decorators.csrf import csrf_exempt
+from django.core.context_processors import csrf
 from django.forms.formsets import formset_factory
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -75,8 +75,7 @@ def paginate_report(report, page):
         # If page is out of range (e.g. 9999), deliver last page of results.
         records = paginator.page(paginator.num_pages)
     return records    
-    
-@csrf_exempt   
+       
 def get_report(request, page=None, template_name=TEMPLATE_INDEX):
     """
     Creates the report from selected table columns and returns the report
@@ -106,6 +105,7 @@ def get_report(request, page=None, template_name=TEMPLATE_INDEX):
     else:
         ctx = {"form": form, "qbeerrors": form.errors}
         logger.error('Invalid form: %s ', form.errors)
+    ctx.update(csrf(request))    
     return render_to_response(template_name, ctx)   
     
 def get_report_data(formset):    
@@ -122,12 +122,10 @@ def is_valid_design_field(design_field):
     """
     return design_field and design_field['field']
 
-@csrf_exempt
 def draw_graph(request):
     axn.draw_graph()
     return redirect('/')
 
-@csrf_exempt
 def show_report_chart(request, template_name=TEMPLATE_INDEX):
     form = QbeForm(request.POST or None)
     DesignFieldFormset = formset_factory(DesignFieldForm)
@@ -157,7 +155,6 @@ def filter_report_for_hist(report_data, hist_id):
             return [data]
     return None        
     
-@csrf_exempt
 def show_histogram(request, hist_id, template_name=TEMPLATE_INDEX):
     form = QbeForm(request.POST or None)
     DesignFieldFormset = formset_factory(DesignFieldForm)
@@ -182,7 +179,6 @@ def show_histogram(request, hist_id, template_name=TEMPLATE_INDEX):
         return render_to_response(template_name, ctx)
     return redirect('/')  
     
-@csrf_exempt
 def export_csv(request, template_name=TEMPLATE_INDEX):
     """    
     Create the HttpResponse object with the appropriate CSV header.
