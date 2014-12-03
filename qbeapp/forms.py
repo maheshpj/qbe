@@ -8,6 +8,7 @@ This module contains the qbe form and design fields formset classes
 """
 
 from django import forms
+
 from qbeapp.dbs import get_table_names
 import qbeapp.utils as utils
 

@@ -8,11 +8,13 @@ from django.shortcuts import render_to_response, redirect
 from django.forms.formsets import formset_factory
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+import logging
+import csv
+
 from qbeapp.forms import *
 import qbeapp.utils as utils
 import qbeapp.action as axn 
-import logging
-import csv
 import qbeapp.errors as errs
 
 logger = logging.getLogger('qbe.log')
@@ -24,11 +26,17 @@ def index(request, template_name=TEMPLATE_INDEX):
     """
     Displays the sidebar table tree and design fields view      
     """
-    clear_design_fields()
-    axn.init_qbe()
-    ctx = {"tables": axn.get_sidebar_tables(), 
-          "form": QbeForm(), 
-          "design_fields": get_design_formset()}    
+    try:
+        clear_design_fields()
+        axn.init_qbe()
+        ctx = {"tables": axn.get_sidebar_tables(), 
+              "form": QbeForm(), 
+              "design_fields": get_design_formset()}   
+    except errs.QBEError as err:
+        logger.exception("An error occurred: " + err.value)
+        ctx = {"qbeerrors": err.value}  
+    except:
+        raise  
     return render_to_response(template_name, ctx)
     
 def change_db(request, db_key, template_name=TEMPLATE_INDEX):
@@ -83,17 +91,15 @@ def get_report(request, page=None, template_name=TEMPLATE_INDEX):
     logger.debug("Requested page: " + str(page))
     try:
         ctx = process_form(request)
+        report_for = ctx['report_for']
+        report_data = ctx['report_data']
 
-        if not ctx.get('qbeerrors'):
-            report_for = ctx['report_for']
-            report_data = ctx['report_data']
-
-            report = axn.get_report_from_data(report_for, report_data)  
-            records = paginate_report(report['results'], page)
-            ctx = { "query": report['query'], 
-                    "header": report['header'],
-                    "report": records
-                    }
+        report = axn.get_report_from_data(report_for, report_data)  
+        records = paginate_report(report['results'], page)
+        ctx = { "query": report['query'], 
+                "header": report['header'],
+                "report": records
+                }
     except errs.QBEError as err:
         logger.exception("An error occurred: " + err.value)
         ctx = {"qbeerrors": err.value}  
@@ -117,13 +123,9 @@ def draw_graph(request, template_name=TEMPLATE_INDEX):
 def show_report_chart(request, template_name=TEMPLATE_INDEX):
     try:
         ctx = process_form(request)
-
-        if not ctx.get('qbeerrors'):
-            report_for = ctx['report_for']
-            report_data = ctx['report_data']
-            axn.show_chart(report_for, report_data)
-        else:
-            return render_to_response(template_name, ctx)
+        report_for = ctx['report_for']
+        report_data = ctx['report_data']
+        axn.show_chart(report_for, report_data)
     except errs.QBEError as err:
         logger.exception("An error occurred: " + err.value)
         ctx = {"qbeerrors": err.value}  
@@ -142,17 +144,13 @@ def filter_report_for_hist(report_data, hist_id):
 def show_histogram(request, hist_id, template_name=TEMPLATE_INDEX):
     try:
         ctx = process_form(request)
-
-        if not ctx.get('qbeerrors'):
-            report_for = ctx['report_for']
-            report_data = ctx['report_data']
-            hist_data = filter_report_for_hist(report_data, hist_id)
-            if hist_data:                
-                axn.show_histogram(report_for, hist_data)
-            else:
-                raise errs.QBEError("No valid data found for histogram.")
+        report_for = ctx['report_for']
+        report_data = ctx['report_data']
+        hist_data = filter_report_for_hist(report_data, hist_id)
+        if hist_data:                
+            axn.show_histogram(report_for, hist_data)
         else:
-            return render_to_response(template_name, ctx)
+            raise errs.QBEError("No valid data found for histogram.")
     except errs.QBEError as err:
         logger.exception("An error occurred: " + err.value)
         ctx = {"qbeerrors": err.value}  
@@ -174,19 +172,17 @@ def export_csv(request, template_name=TEMPLATE_INDEX):
 
     try:
         ctx = process_form(request)
+        report_for = ctx['report_for']
+        report_data = ctx['report_data']
 
-        if not ctx.get('qbeerrors'):
-            report_for = ctx['report_for']
-            report_data = ctx['report_data']
-
-            report = axn.get_report_from_data(report_for, report_data)             
-            if report:        
-                writer = csv.writer(response)
-                writer.writerow(report['header'])
-                for row in report['results']:
-                    writer.writerow(row)
+        report = axn.get_report_from_data(report_for, report_data)             
+        if report:        
+            writer = csv.writer(response)
+            writer.writerow(report['header'])
+            for row in report['results']:
+                writer.writerow(row)
         else:
-            return render_to_response(template_name, ctx)
+            raise errs.QBEError("No data found")
     except errs.QBEError as err:
         logger.exception("An error occurred: " + err.value)
         ctx = {"qbeerrors": err.value}  
@@ -226,14 +222,15 @@ def process_form(request):
     if form.is_valid() and formset.is_valid():
         report_data = get_report_data(formset)
         form_data = form.cleaned_data
+
         if (form_data['table_name'] and form_data['column_name']):
             custom_field_map = get_custom_field_map(form_data)
             report_data.append(custom_field_map)
+        
         report_for = form_data['report_for']  
         if (report_data and report_for):                
             return {"report_for": report_for, "report_data": report_data}
         else:
-            return {"qbeerrors": "Input data is not valid."}                       
+            raise errs.QBEError("Input data is not valid")                   
     else:        
-        logger.error('Invalid form: %s ', form.errors)
-        return {"form": form, "qbeerrors": form.errors}
+        raise errs.QBEError(str(form.errors))

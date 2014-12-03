@@ -7,6 +7,10 @@ Created on Thu Nov 06 13:39:44 2014
 This module uses Sqlalchemy library to fetch database metadata from various 
 databases and also executes the auto generate sql statement to fetch records
 """
+
+from django.conf import settings
+import logging
+
 try:
     from sqlalchemy import create_engine, MetaData
     from sqlalchemy.engine import reflection
@@ -16,9 +20,8 @@ except ImportError:
     import sys
     print("sqlalchemy needed for database communication. Skipping")
     sys.exit(0)
-from django.conf import settings
+
 import qbeapp.utils as utils
-import logging
 import qbeapp.errors as errs
 
 logger = logging.getLogger('qbe.log')

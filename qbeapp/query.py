@@ -7,10 +7,11 @@ Created on Thu Nov 16 2014
 This module will create a query from submitted user data
 """
 
-from qbeapp.utils import *
-import qbeapp.joins as jns
 import logging
 import re
+
+from qbeapp.utils import *
+import qbeapp.joins as jns
 import qbeapp.errors as errs
 import qbeapp.utils as util
 
