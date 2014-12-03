@@ -1,22 +1,36 @@
-<ul>
-    {% load qbe_extras %}                          
-    {% for key, value in tables.items %}
-        <li>
-            <p onclick="toggle('{{ key }}')">{{ key|simplify_name|capfirst }} </p>
-            <ul style="display: none" id={{ key }} name={{ key }}>
-                {% for clm in value %}
-                    <li>
-                        {% spaceless %}                            
-                            <p>
-                                <input type="checkbox" 
-                                    onclick="addElement(this, '{{ key }}', '{{ clm.name }}')">  
-                                {{ clm.name|simplify_name }} 
-                                <label class="liteTxt">({{ clm.type|class_name|lower|capfirst }})</label>
-                            </p>           
-                        {% endspaceless %}
-                    </li>
-                {% endfor %}
-            </ul>
-        </li>
-    {% endfor %}
-</ul>
+<div>
+    <div class="ibDiv">
+        <p><a id="clearAllClms" href="javascript:void(0)" 
+                class="clearAll">Deselect all</a></p>
+    </div>    
+    <div class="showDBGraph">
+        <input id="showGraphBtn" class="simpleBtn" 
+            type="button" value="Relationship Graph">
+    </div>
+</div>
+
+<div class="sidebar">
+    <ul>
+        {% load qbe_extras %}                          
+        {% for key, value in tables.items %}
+            <li>
+                <p onclick="toggle('{{ key }}')">{{ key|simplify_name|capfirst }} </p>
+                <ul style="display: none" id={{ key }} name={{ key }}>
+                    {% for clm in value %}
+                        <li>
+                            {% spaceless %}                            
+                                <p>
+                                    <input type="checkbox" 
+                                        name="cbQbeClm"
+                                        onclick="addElement(this, '{{ key }}', '{{ clm.name }}')">  
+                                    {{ clm.name|simplify_name }} 
+                                    <label class="liteTxt">({{ clm.type|class_name|lower|capfirst }})</label>
+                                </p>           
+                            {% endspaceless %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+<div>

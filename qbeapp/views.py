@@ -5,7 +5,6 @@ Created on Thu Nov 06 13:39:44 2014
 @author: Mahesh.Jadhav
 """
 from django.shortcuts import render_to_response, redirect
-from django.views.decorators.csrf import csrf_exempt
 from django.forms.formsets import formset_factory
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -76,7 +75,6 @@ def paginate_report(report, page):
         records = paginator.page(paginator.num_pages)
     return records    
     
-@csrf_exempt   
 def get_report(request, page=None, template_name=TEMPLATE_INDEX):
     """
     Creates the report from selected table columns and returns the report
@@ -104,7 +102,6 @@ def get_report(request, page=None, template_name=TEMPLATE_INDEX):
 
     return render_to_response(template_name, ctx) 
 
-@csrf_exempt
 def draw_graph(request, template_name=TEMPLATE_INDEX):
     try:        
         axn.draw_graph()
@@ -117,7 +114,6 @@ def draw_graph(request, template_name=TEMPLATE_INDEX):
 
     return redirect('/')
 
-@csrf_exempt
 def show_report_chart(request, template_name=TEMPLATE_INDEX):
     try:
         ctx = process_form(request)
@@ -126,6 +122,8 @@ def show_report_chart(request, template_name=TEMPLATE_INDEX):
             report_for = ctx['report_for']
             report_data = ctx['report_data']
             axn.show_chart(report_for, report_data)
+        else:
+            return render_to_response(template_name, ctx)
     except errs.QBEError as err:
         logger.exception("An error occurred: " + err.value)
         ctx = {"qbeerrors": err.value}  
@@ -141,7 +139,6 @@ def filter_report_for_hist(report_data, hist_id):
             return [data]
     return None        
     
-@csrf_exempt
 def show_histogram(request, hist_id, template_name=TEMPLATE_INDEX):
     try:
         ctx = process_form(request)
@@ -154,6 +151,8 @@ def show_histogram(request, hist_id, template_name=TEMPLATE_INDEX):
                 axn.show_histogram(report_for, hist_data)
             else:
                 raise errs.QBEError("No valid data found for histogram.")
+        else:
+            return render_to_response(template_name, ctx)
     except errs.QBEError as err:
         logger.exception("An error occurred: " + err.value)
         ctx = {"qbeerrors": err.value}  
@@ -163,7 +162,6 @@ def show_histogram(request, hist_id, template_name=TEMPLATE_INDEX):
 
     return redirect('/')  
     
-@csrf_exempt
 def export_csv(request, template_name=TEMPLATE_INDEX):
     """    
     Create the HttpResponse object with the appropriate CSV header.
@@ -187,6 +185,8 @@ def export_csv(request, template_name=TEMPLATE_INDEX):
                 writer.writerow(report['header'])
                 for row in report['results']:
                     writer.writerow(row)
+        else:
+            return render_to_response(template_name, ctx)
     except errs.QBEError as err:
         logger.exception("An error occurred: " + err.value)
         ctx = {"qbeerrors": err.value}  
@@ -224,4 +224,4 @@ def process_form(request):
             return {"qbeerrors": "Input data is not valid."}                       
     else:        
         logger.error('Invalid form: %s ', form.errors)
-        return {"form": form, "qbeerrors": form.errors}  
+        return {"form": form, "qbeerrors": form.errors}
