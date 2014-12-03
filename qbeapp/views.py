@@ -197,6 +197,7 @@ def export_csv(request, template_name=TEMPLATE_INDEX):
     DesignFieldFormset = formset_factory(DesignFieldForm)
     formset = DesignFieldFormset(request.POST or None)
     report = None    
+    
     if form.is_valid() and formset.is_valid():
         try:
             report_data = get_report_data(formset)
@@ -211,9 +212,15 @@ def export_csv(request, template_name=TEMPLATE_INDEX):
             return render_to_response(template_name, ctx) 
         except:
             logger.exception("An error occurred")
+    else:
+        ctx = {"form": form, "qbeerrors": form.errors}
+        logger.error('Invalid form: %s ', form.errors)
+        return render_to_response(template_name, ctx)        
+    
     if report:        
         writer = csv.writer(response)
         writer.writerow(report['header'])
         for row in report['results']:
             writer.writerow(row)
+            
     return response

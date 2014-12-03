@@ -142,19 +142,25 @@ def generate_sql(report_for, report_data):
     returns the sql string
     """
     logger.info("Generating sql for " + report_for + "...")
-    columns = get_query_columns(report_data)
-    tables = get_query_tables(report_data)
-    from_part = jns.get_from_part(report_for, tables)
-    where = get_query_where(report_data)
-    group_by = get_query_groupby(report_data)
-    order_by = get_query_orderby(report_data)
-    conditions = {}
-    if where:
-        conditions[WHERE] = where
-    if group_by:
-        conditions[GROUP_BY] = group_by
-    if order_by:
-        conditions[ORDER_BY] = order_by    
-    query_parts = create_query_parts(columns, from_part, **conditions)
-    query = SPACE.join(query_parts)
+    try:    
+        columns = get_query_columns(report_data)
+        tables = get_query_tables(report_data)
+        from_part = jns.get_from_part(report_for, tables)
+        where = get_query_where(report_data)
+        group_by = get_query_groupby(report_data)
+        order_by = get_query_orderby(report_data)
+        conditions = {}
+        if where:
+            conditions[WHERE] = where
+        if group_by:
+            conditions[GROUP_BY] = group_by
+        if order_by:
+            conditions[ORDER_BY] = order_by    
+        query_parts = create_query_parts(columns, from_part, **conditions)
+        query = SPACE.join(query_parts)
+    except errs.QBEError:
+        raise
+    except:    
+        raise errs.QBEError("Error occurred while generating query.")
+        
     return query
