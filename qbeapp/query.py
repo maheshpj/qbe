@@ -30,7 +30,10 @@ def get_included_fields(report_data):
     included_fields = []
     for data in report_data:
         if not data['exclude']:
-            included_fields.append(data['field'])
+            if data.get('custom'):
+                included_fields.append(get_clm_from_field(data['field']))
+            else:    
+                included_fields.append(data['field'])
     return included_fields
 
 def get_query_columns(report_data):
@@ -41,9 +44,9 @@ def get_query_columns(report_data):
     for data in report_data:
         if not data['exclude']:
             total = data['total']
-            idx = fields.index(data['field'])
             if total and total != 'group by':
-                total_field = total + parenthesized_str(data['field'])
+                total_field = total + parenthesized_str(data['field'])                
+                idx = fields.index(data['field'])
                 fields[idx] = total_field
     clms = COMMA.join(fields)
     return clms
@@ -54,6 +57,12 @@ def get_query_tables(report_data):
     """
     fields = get_fields_from_report_data(report_data)
     return list(set(map(get_table_from_field, fields)))
+
+def get_clm_from_field(field):
+    """
+    Returns the tablename from submitted design field
+    """
+    return parse_table_clm_from_field(field)[1]
 
 def get_table_from_field(field):
     """

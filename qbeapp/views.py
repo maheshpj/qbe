@@ -210,6 +210,14 @@ def is_valid_design_field(design_field):
     """
     return design_field and design_field['field']
 
+def get_custom_field_map(form_data):
+    field = utils.DOT.join([form_data.get('table_name'), 
+                            form_data.get('column_name')
+            ])
+    form_data['field'] = field
+    form_data['custom'] = True
+    return form_data
+
 def process_form(request):
     form = QbeForm(request.POST or None)
     DesignFieldFormset = formset_factory(DesignFieldForm)
@@ -217,7 +225,11 @@ def process_form(request):
 
     if form.is_valid() and formset.is_valid():
         report_data = get_report_data(formset)
-        report_for = form.cleaned_data['report_for']  
+        form_data = form.cleaned_data
+        if (form_data['table_name'] and form_data['column_name']):
+            custom_field_map = get_custom_field_map(form_data)
+            report_data.append(custom_field_map)
+        report_for = form_data['report_for']  
         if (report_data and report_for):                
             return {"report_for": report_for, "report_data": report_data}
         else:
