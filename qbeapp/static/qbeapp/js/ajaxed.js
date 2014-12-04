@@ -1,3 +1,34 @@
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+var csrftoken = getCookie('csrftoken');
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+$.ajaxSetup({
+    beforeSend: function (xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
 $(document).ready(function () {
 
     $("body").append('<div id="loading_indicator">Loading...</div>');
@@ -29,51 +60,70 @@ $(document).ready(function () {
     var CLICK = "click";
 
     function getReport(data) {
-        var report_data = $(data).find("#reporttbl");
-        var errors = $(data).find("#reportfor_err");
+        var report_data = $(data).find("#reporttbl");        
         $("#main-report").empty().append(report_data);
-        $("#reportfor_err").empty().append(errors);
-    }
-
-    function failure(xhr, errmsg, err) {
-        $("#reportfor_err").html("<div class='errorlist'>" + err + "</div>");
-        console.log(xhr.status + ": " + xhr.responseText);
+        showError(data);
     }
 
     $(document).on(CLICK, "#prevlink", function (event) {
         nxtpage = $("#prvpage").val().toString();
         to_url = "/report/" + nxtpage + "/"
         $.post(to_url, $(qbeFormId).serialize())
-        .done(function (data) { getReport(data) })
-        .fail(function (xhr, errmsg, err) {failure(xhr, errmsg, err)});
+        .done(function (data) { 
+            getReport(data);
+        })
+        .fail(function (xhr, errmsg, err) {
+            failure(xhr, errmsg, err);
+        });
     });
 
     $(document).on(CLICK, "#nextlink", function (event) {
         nxtpage = $("#nxtpage").val().toString();
         to_url = "/report/" + nxtpage + "/"
         $.post(to_url, $(qbeFormId).serialize())
-        .done(function (data) { getReport(data) })
-        .fail(function (xhr, errmsg, err) {failure(xhr, errmsg, err)});
+        .done(function (data) {
+            getReport(data);
+        })
+        .fail(function (xhr, errmsg, err) {
+            failure(xhr, errmsg, err);
+        });
     });
 
     $("#runbtn").on(CLICK, function (event) {
         $.post("/report/", $(qbeFormId).serialize())
-        .done(function (data) { getReport(data) })
-        .fail(function (xhr, errmsg, err) {failure(xhr, errmsg, err)});
+        .done(function (data) { 
+            getReport(data); 
+        })
+        .fail(function (xhr, errmsg, err) {
+            failure(xhr, errmsg, err);
+        });
     });
 
     $("#showGraphBtn").click(function (event) {
         $.post("/draw/", $(qbeFormId).serialize())
-        .done(function (data) {})
-        .fail(function (xhr, errmsg, err) {failure(xhr, errmsg, err)});
+        .done(function (data) {
+            showError(data);
+        })
+        .fail(function (xhr, errmsg, err) {
+            failure(xhr, errmsg, err);
+        });
+    });
+    
+    $("#showChartBtn").click(function (event) {
+        $.post("/report/chart/", $(qbeFormId).serialize())
+        .done(function (data) {
+            showError(data);
+        })
+        .fail(function (xhr, errmsg, err) {
+            failure(xhr, errmsg, err);
+        });
     });
 
     $("#exportBtn").click(function (event) {
         $.post("/export/", $(qbeFormId).serialize())
         .done(function (data) {
             try {
-                var errors = $(data).find("#reportfor_err");
-                $("#reportfor_err").empty().append(errors);
+                showError(data);
             } catch (err) {
                 $("#reportfor_err").empty();
                 window.URL = window.webkitURL || window.URL;
@@ -91,11 +141,40 @@ $(document).ready(function () {
     });
 
     $("#toggleDesign").click(function() {
-        $("#subdesign").toggle();
+        $("#subdesign").toggle('blind', 500);
         if ($("#toggleDesign").text() == 'hide') {
             $("#toggleDesign").text('show report fields');
         } else {
             $("#toggleDesign").text('hide');
         }
     });
-})
+
+    $("#clearAllClms").click(function() {
+        var checkBoxes = $("input[name=cbQbeClm]");
+        checkBoxes.prop("checked", !checkBoxes.prop("checked"));
+        checkBoxes.each(function(){
+            this.click();
+        })
+    });
+
+});
+
+function showError(data) {
+    var errors = $(data).find("#reportfor_err");
+    $("#reportfor_err").empty().append(errors);
+}
+
+function failure(xhr, errmsg, err) {
+    $("#reportfor_err").html("<div class='errorlist'>" + err + "</div>");
+    console.log(xhr.status + ": " + xhr.responseText);
+}
+
+function hist(id) {
+    $.post("/report/hist/" + id, $("#qbeform").serialize())
+    .done(function (data) {
+        showError(data);
+    })
+    .fail(function (xhr, errmsg, err) {
+        failure(xhr, errmsg, err);
+    });
+}

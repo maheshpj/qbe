@@ -1,7 +1,8 @@
 h1 {
-    color: #909090;
+    color: #5F9EA0;
     margin: 2px;
     padding: 1px;
+    text-shadow: 2px 1px 10px white;
 }
 
 select {
@@ -50,6 +51,12 @@ ul.errorlist {
 body {
     font-family: Verdana, sans-serif;
     font-size: 0.8em;
+    margin: 0px;
+}
+
+header {
+    background-color: #B4D8E7;
+    padding: 4px;
 }
 
 maindesign #reportfor select {
@@ -71,8 +78,13 @@ content {
 nav {
     float: left;
     height: 640px;
-    overflow: auto;
     width: 25%;
+}
+
+.sidebar {
+    margin-top: 5px;
+    height: 620px;    
+    overflow: auto;
 }
 
 action {
@@ -113,7 +125,8 @@ dbtable {
 }
 
 table tr td {
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid;
+    border-color: #dcdcdc;
 }
 
 maindesign {
@@ -145,8 +158,8 @@ maindesign {
     height: 30px;
     border-radius: 30px;
     margin-right: 5px;
-    color: maroon;
-    background-color: lightsteelblue;
+    color: #008b8b;
+    background-color: #B0C4DE;
 }
 
 .pagination {
@@ -169,7 +182,7 @@ maindesign {
 
 .sheet {
     float: left;
-    width: 90%;
+    width: 100%;
     overflow: auto;
 }
 
@@ -194,6 +207,23 @@ maindesign {
     height: 10px;
 }
 
+.customDesign {
+    width:265px;
+    background-color: honeydew; 
+    border-radius: 12px;
+    display: inline-block;
+}
+
+.customClm {
+    width: 248px;
+}
+
+.normalDesign {
+    width: 265px;
+    background-color: antiquewhite;
+    border-radius: 12px;
+}
+
 .toggleSubdesign {
     width: 99%;
     text-align: end;
@@ -202,4 +232,35 @@ maindesign {
 
 .reportFor {
     width: 50%;
+}
+
+.liteTxt {
+    color: #c1b8b8;
+}
+
+.noUnderline {
+    text-decoration: none;
+}
+
+.clearAll {
+    margin-left: 20px;
+    text-decoration: none;
+}
+
+.showDBGraph {
+    display: inline-block;
+    float: right;
+}
+
+.ibDiv {
+    display: inline-block;
+}
+
+.simpleBtn {
+    width: 160px;
+    height: 20px;
+    border-radius: 20px;
+    margin-right: 5px;
+    color: #008b8b;
+    background-color: #B0C4DE;
 }

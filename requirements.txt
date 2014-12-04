@@ -1,0 +1,4 @@
+django>=1.7.1
+matplotlib>=1.4.0
+networkx>=1.9.1
+sqlalchemy>=0.9.8

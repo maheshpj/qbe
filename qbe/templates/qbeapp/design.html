@@ -1,4 +1,5 @@
 <maindesign>
+    {% load qbe_extras %}     
     <div id="reportfor" name="reportfor">
         <div class="reportFor">
         {{ form.report_for }}  
@@ -11,63 +12,141 @@
             <a id="toggleDesign" href="javascript:void(0)">hide</a>     
         </div>
     </div>
+
     <div id="subdesign">
         <div class="sheet" id="sheet">
-            {{ design_fields.management_form }}
-            {% for design_field_form in design_fields.forms %}  
-                     
-            <div id="div-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
-                style="width:260px; display: {{design_field_form.style_display }}">
-                <input type="hidden" 
-                    id="cnt-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
-                    value="{{ forloop.counter0 }}">
-                {{ design_field_form.field }}              
+           
+             <div id="customDesignField" class="customDesign">
                 <table width="100%">
                     <tr>
                         <td>
-                            <p class="fieldname">{{ design_field_form.column_name }}</p>
+                            <p class="fieldname">{{ form.column_name }}</p>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <p class="tablename">{{ design_field_form.table_name }}</p>
+                            <p class="tablename">{{ form.table_name }}</p>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <p>{{ design_field_form.exclude }} Exclude</p>
+                            <p>{{ form.exclude }} Exclude</p>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <p>{{ design_field_form.sort }} Sort</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <p>{{ design_field_form.total }} Total</p>
+                            <p>{{ form.sort }} Sort</p>
                         </td>
                     </tr>
                     <tr>
                         <td>
                             <p>
-                                {{ design_field_form.operator }}
-                                {{ design_field_form.criteria }}
-                                {{ design_field_form.errors }} 
+                                {{ form.operator }}
+                                {{ form.criteria }}
+                                {{ form.errors }} 
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p>
+                                {{ form.oroperator }}
+                                {{ form.orcriteria }}
+                                {{ form.errors }} 
                             </p>
                         </td>
                     </tr>
                     <tr>
                         <td style="border-bottom: 0px">
+                            <p>{{ form.chart }} Bar Chart</p>
                             <p>
-                                {{ design_field_form.oroperator }}
-                                {{ design_field_form.orcriteria }}
-                                {{ design_field_form.errors }} 
+                                <a class="noUnderline"
+                                    href="javascript:void(0)"
+                                    onclick="hist('{{ design_field_form.table_name }}.{{ design_field_form.column_name }}')">
+                                    Histogram
+                                </a>
                             </p>
                         </td>
                     </tr>
                 </table>
             </div>
+    
+            {{ design_fields.management_form }}
+            {% for design_field_form in design_fields.forms %}  
+                     
+                <div id="div-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
+                    class="normalDesign" style="display: {{design_field_form.style_display }}">
+                
+                    <input type="hidden" 
+                        id="cnt-{{ design_field_form.table_name }}.{{ design_field_form.column_name }}" 
+                        value="{{ forloop.counter0 }}">
+                
+                    {{ design_field_form.field }}              
+                
+                    <table width="100%">
+                        <tr>
+                            <td>
+                                <p class="fieldname">
+                                    {{ design_field_form.column_name }}
+                                    <label class="liteTxt">
+                                        ({{ design_field_form.datatype|class_name|lower|capfirst }})
+                                    </label>
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p class="tablename">{{ design_field_form.table_name }}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>{{ design_field_form.exclude }} Exclude</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>{{ design_field_form.sort }} Sort</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>{{ design_field_form.total }} Total</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    {{ design_field_form.operator }}
+                                    {{ design_field_form.criteria }}
+                                    {{ design_field_form.errors }} 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <p>
+                                    {{ design_field_form.oroperator }}
+                                    {{ design_field_form.orcriteria }}
+                                    {{ design_field_form.errors }} 
+                                </p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="border-bottom: 0px">
+                                <p>{{ design_field_form.chart }} Bar Chart</p>
+                                <p>
+                                    <a class="noUnderline"
+                                        href="javascript:void(0)"
+                                        onclick="hist('{{ design_field_form.table_name }}.{{ design_field_form.column_name }}')">
+                                        Histogram
+                                    </a>
+                                </p>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            
             {% endfor %}    
         </div>  
     </div>  

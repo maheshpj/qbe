@@ -5,17 +5,17 @@ Created on Thu Nov 06 13:39:44 2014
 @author: Mahesh.Jadhav
 """
 from django.shortcuts import render_to_response, redirect
-from django.views.decorators.csrf import csrf_exempt
 from django.forms.formsets import formset_factory
 from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
+import logging
+import csv
+
 from qbeapp.forms import *
 import qbeapp.utils as utils
 import qbeapp.action as axn 
-import logging
-import csv
 import qbeapp.errors as errs
-
 
 logger = logging.getLogger('qbe.log')
 design_fields = []
@@ -26,11 +26,17 @@ def index(request, template_name=TEMPLATE_INDEX):
     """
     Displays the sidebar table tree and design fields view      
     """
-    clear_design_fields()
-    axn.init_qbe()
-    ctx = {"tables": axn.get_sidebar_tables(), 
-          "form": QbeForm(), 
-          "design_fields": get_design_formset()}    
+    try:
+        clear_design_fields()
+        axn.init_qbe()
+        ctx = {"tables": axn.get_sidebar_tables(), 
+              "form": QbeForm(), 
+              "design_fields": get_design_formset()}   
+    except errs.QBEError as err:
+        logger.exception("An error occurred: " + err.value)
+        ctx = {"qbeerrors": err.value}  
+    except:
+        raise  
     return render_to_response(template_name, ctx)
     
 def change_db(request, db_key, template_name=TEMPLATE_INDEX):
@@ -40,6 +46,16 @@ def change_db(request, db_key, template_name=TEMPLATE_INDEX):
           "form": QbeForm(), 
           "design_fields": get_design_formset()}    
     return render_to_response(template_name, ctx)
+
+def create_formset_from_tables(formset, design_field_forms):
+    count = 0 
+    for form in formset:
+        dsn_field = design_field_forms[count]
+        form.table_name = dsn_field[0]
+        form.column_name = dsn_field[1]['name']
+        form.datatype = dsn_field[1]['type']
+        count = count + 1
+    return  formset   
 
 def get_design_formset():
     """
@@ -51,14 +67,6 @@ def get_design_formset():
     formset = create_formset_from_tables(DesignFieldFormset(), 
                                          design_field_forms)    
     return formset    
-
-def create_formset_from_tables(formset, design_field_forms):
-    count = 0 
-    for form in formset:
-        form.table_name = design_field_forms[count][0]
-        form.column_name = design_field_forms[count][1]
-        count = count + 1
-    return  formset   
                             
 def clear_design_fields():
     del design_fields[:]
@@ -75,58 +83,83 @@ def paginate_report(report, page):
         records = paginator.page(paginator.num_pages)
     return records    
     
-@csrf_exempt   
 def get_report(request, page=None, template_name=TEMPLATE_INDEX):
     """
     Creates the report from selected table columns and returns the report
     also paginate the report records
     """
     logger.debug("Requested page: " + str(page))
-    form = QbeForm(request.POST or None)
-    DesignFieldFormset = formset_factory(DesignFieldForm)
-    formset = DesignFieldFormset(request.POST or None)
-    ctx = {}
-    if form.is_valid() and formset.is_valid():
-        try:   
-            report_data = get_report_data(formset)            
-            report_for = form.cleaned_data['report_for']  
-            if report_data and report_for:                  
-                report = axn.get_report_from_data(report_for, report_data)  
-                records = paginate_report(report['results'], page)
-                ctx = {"form": form, 
-                       "query": report['query'], 
-                       "header": report['header'],
-                       "report": records}
-            else:
-                raise errs.QBEError("No valid data found for report.")
-        except errs.QBEError as err:
-            logger.exception("An error occurred: " + err.value)
-            ctx = {"qbeerrors": err.value}    
-    else:
-        ctx = {"form": form, "qbeerrors": form.errors}
-        logger.error('Invalid form: %s ', form.errors)
-    return render_to_response(template_name, ctx)   
-    
-def get_report_data(formset):    
-    report_data = []
-    for f in formset.forms: 
-        if is_valid_design_field(f.cleaned_data):
-            logger.debug("Submitted report data: " + str(f.cleaned_data))
-            report_data.append(f.cleaned_data)      
-    return report_data    
-         
-def is_valid_design_field(design_field):
-    """
-    Checks if submitted field is valid or not and returns True/False
-    """
-    return design_field and design_field['field']
+    try:
+        ctx = process_form(request)
+        report_for = ctx['report_for']
+        report_data = ctx['report_data']
 
-@csrf_exempt
-def draw_graph(request):
-    axn.draw_graph()
+        report = axn.get_report_from_data(report_for, report_data)  
+        records = paginate_report(report['results'], page)
+        ctx = { "query": report['query'], 
+                "header": report['header'],
+                "report": records
+                }
+    except errs.QBEError as err:
+        logger.exception("An error occurred: " + err.value)
+        ctx = {"qbeerrors": err.value}  
+    except:
+        raise       
+
+    return render_to_response(template_name, ctx) 
+
+def draw_graph(request, template_name=TEMPLATE_INDEX):
+    try:        
+        axn.draw_graph()
+    except errs.QBEError as err:
+        logger.exception("An error occurred: " + err.value)
+        ctx = {"qbeerrors": err.value}  
+        return render_to_response(template_name, ctx) 
+    except:
+        raise
+
     return redirect('/')
+
+def show_report_chart(request, template_name=TEMPLATE_INDEX):
+    try:
+        ctx = process_form(request)
+        report_for = ctx['report_for']
+        report_data = ctx['report_data']
+        axn.show_chart(report_for, report_data)
+    except errs.QBEError as err:
+        logger.exception("An error occurred: " + err.value)
+        ctx = {"qbeerrors": err.value}  
+        return render_to_response(template_name, ctx)  
+    except:
+        raise  
+
+    return redirect('/')  
+
+def filter_report_for_hist(report_data, hist_id):
+    for data in report_data:
+        if data["field"] == hist_id:
+            return [data]
+    return None        
     
-@csrf_exempt
+def show_histogram(request, hist_id, template_name=TEMPLATE_INDEX):
+    try:
+        ctx = process_form(request)
+        report_for = ctx['report_for']
+        report_data = ctx['report_data']
+        hist_data = filter_report_for_hist(report_data, hist_id)
+        if hist_data:                
+            axn.show_histogram(report_for, hist_data)
+        else:
+            raise errs.QBEError("No valid data found for histogram.")
+    except errs.QBEError as err:
+        logger.exception("An error occurred: " + err.value)
+        ctx = {"qbeerrors": err.value}  
+        return render_to_response(template_name, ctx)  
+    except:
+        raise  
+
+    return redirect('/')  
+    
 def export_csv(request, template_name=TEMPLATE_INDEX):
     """    
     Create the HttpResponse object with the appropriate CSV header.
@@ -137,27 +170,67 @@ def export_csv(request, template_name=TEMPLATE_INDEX):
     response['Content-Disposition'] = 'attachment;filename=' + filename
     logger.info('Exporting csv ' + filename)
 
+    try:
+        ctx = process_form(request)
+        report_for = ctx['report_for']
+        report_data = ctx['report_data']
+
+        report = axn.get_report_from_data(report_for, report_data)             
+        if report:        
+            writer = csv.writer(response)
+            writer.writerow(report['header'])
+            for row in report['results']:
+                writer.writerow(row)
+        else:
+            raise errs.QBEError("No data found")
+    except errs.QBEError as err:
+        logger.exception("An error occurred: " + err.value)
+        ctx = {"qbeerrors": err.value}  
+        return render_to_response(template_name, ctx)  
+    except:
+        raise 
+
+    return response
+    
+def get_report_data(formset):    
+    report_data = []
+    for f in formset.forms: 
+        if (is_valid_design_field(f.cleaned_data)):
+            logger.debug("Submitted report data: " + str(f.cleaned_data))
+            report_data.append(f.cleaned_data)      
+    return report_data    
+         
+def is_valid_design_field(design_field):
+    """
+    Checks if submitted field is valid or not and returns True/False
+    """
+    return design_field and design_field['field']
+
+def get_custom_field_map(form_data):
+    field = utils.DOT.join([form_data.get('table_name'), 
+                            form_data.get('column_name')
+            ])
+    form_data['field'] = field
+    form_data['custom'] = True
+    return form_data
+
+def process_form(request):
     form = QbeForm(request.POST or None)
     DesignFieldFormset = formset_factory(DesignFieldForm)
     formset = DesignFieldFormset(request.POST or None)
-    report = None    
+
     if form.is_valid() and formset.is_valid():
-        try:
-            report_data = get_report_data(formset)
-            report_for = form.cleaned_data['report_for']  
-            if report_data and report_for:  
-                report = axn.get_report_from_data(report_for, report_data) 
-            else:
-                raise errs.QBEError("No valid data found for report.")
-        except errs.QBEError as err:
-            logger.exception("An error occurred: " + err.value)
-            ctx = {"qbeerrors": err.value}
-            return render_to_response(template_name, ctx) 
-        except:
-            logger.exception("An error occurred")
-    if report:        
-        writer = csv.writer(response)
-        writer.writerow(report['header'])
-        for row in report['results']:
-            writer.writerow(row)
-    return response
+        report_data = get_report_data(formset)
+        form_data = form.cleaned_data
+
+        if (form_data['table_name'] and form_data['column_name']):
+            custom_field_map = get_custom_field_map(form_data)
+            report_data.append(custom_field_map)
+        
+        report_for = form_data['report_for']  
+        if (report_data and report_for):                
+            return {"report_for": report_for, "report_data": report_data}
+        else:
+            raise errs.QBEError("Input data is not valid")                   
+    else:        
+        raise errs.QBEError(str(form.errors))

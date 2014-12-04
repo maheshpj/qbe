@@ -4,25 +4,21 @@ Created on Sun Nov 09 15:30:08 2014
 
 @author: Mahesh.Jadhav
 
-This module uses networkx graphs to create database tables graph using foreign key as edge
+This module uses networkx graphs to create database tables graph 
+using foreign key as edge
 """
-
-from qbeapp.utils import *
-import qbeapp.dbs as db
 import logging
-import qbeapp.errors as errs
+
 try:
     import networkx as nx
 except ImportError:
     import sys
     print("NetworkX needed for graphs. Skipping")
     sys.exit(0)
-try:
-    import matplotlib.pyplot as plt
-except ImportError:
-    import sys
-    print("Matplotlib needed for drawing. Skipping")
-    sys.exit(0)
+
+from qbeapp.utils import *
+import qbeapp.dbs as db
+import qbeapp.errors as errs
 
 logger = logging.getLogger('qbe.log')
 graph = None
@@ -87,7 +83,7 @@ def build_inner_join(source, target):
         raise errs.QBEError("Invalid nodes.")       
     kees = join_dict.keys()
     pk_tbl = source    
-    if pk_tbl == kees[0]:
+    if (pk_tbl == kees[0]):
         pk_tbl = target    
     pk_dict = get_db_pk_dict()         
     on_val = ' = '.join((join_on(kees[0], join_dict), 
@@ -114,7 +110,8 @@ def get_db_pk_dict():
 
 def create_primary_key_dict():    
     """
-    Creates table and its primary key relation dictionary like {'tablename': 'pk_column'}
+    Creates table and its primary key relation dictionary like 
+        {'tablename': 'pk_column'}
     returns dictionary
     """
     logger.info("Creating primary key dict...")
@@ -132,7 +129,8 @@ def create_primary_key_dict():
     
 def create_db_graph():
     """
-    Creates database graph using edge like {'pk_table', 'fk_table', fk={'fk_table': 'fk_column'}}
+    Creates database graph using edge like 
+        {'pk_table', 'fk_table', fk={'fk_table': 'fk_column'}}
     returns networkx graph object
     """
     logger.info("Creating database graph...")
@@ -145,61 +143,3 @@ def create_db_graph():
                     graph.add_edge(str(fk.column.table), str(clm.table), 
                                    fk={str(clm.table): str(clm.name)})
     return graph
-
-def draw_graph(graph, labels=None, 
-               graph_layout='shell',
-               node_size=1600, 
-               node_color='blue', 
-               node_alpha=0.4,
-               node_text_size=10,
-               edge_color='grey', 
-               edge_alpha=0.3, 
-               edge_tickness=1,
-               edge_text_pos=0.3,
-               text_font='sans-serif'):
-    # these are different layouts for the network you may try
-    # shell seems to work best
-    if graph_layout == 'spring':
-        graph_pos=nx.spring_layout(graph)
-    elif graph_layout == 'spectral':
-        graph_pos=nx.spectral_layout(graph)
-    elif graph_layout == 'random':
-        graph_pos=nx.random_layout(graph)
-    else:
-        graph_pos=nx.shell_layout(graph)
-
-    # draw graph
-    nx.draw_networkx_nodes(graph, graph_pos,node_size=node_size, 
-                           alpha=node_alpha, node_color=node_color)
-    nx.draw_networkx_edges(graph, graph_pos, width=edge_tickness,
-                           alpha=edge_alpha, edge_color=edge_color)
-    nx.draw_networkx_labels(graph, graph_pos, font_size=node_text_size,
-                            font_family=text_font)
-
-    if labels is None:
-        labels =  range(len(graph.edges()))
-    # dict([((u,v,),d) for u,v,d in graph.edges(data=True)])
-
-    edge_labels = dict(zip(graph.edges(), labels))
-
-    nx.draw_networkx_edge_labels(graph, graph_pos, edge_labels=edge_labels, 
-                                 label_pos=edge_text_pos)
-
-    font = {'fontname'   : 'Helvetica',
-            'color'      : 'm',
-            'fontweight' : 'bold',
-            'fontsize'   : 14}
-    plt.title("Database Tables Graph", font)
-
-    font = {'fontname'   : 'Helvetica',
-            'color'      : 'r',
-            'fontweight' : 'bold',
-            'fontsize'   : 14}
-
-    plt.text(0.5, 0.97, "edge = foreign key relationship",
-             horizontalalignment='center',
-             transform=plt.gca().transAxes)
-    plt.axis('off')
-    plt.savefig("db_tbls_graph.png")
-    # show graph
-    plt.show()
